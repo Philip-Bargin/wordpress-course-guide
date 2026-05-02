@@ -1,0 +1,3164 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Build a WordPress Site From Scratch — Sweet Palm Bakery Project</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;0,600;0,700;1,400&family=Source+Serif+4:ital,opsz,wght@0,8..60,300;0,8..60,400;0,8..60,600;1,8..60,300;1,8..60,400&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet" />
+
+  <style>
+    /* =============================================
+       CSS CUSTOM PROPERTIES
+    ============================================= */
+    :root {
+      --green-900: #0D2B1A;
+      --green-800: #1B4332;
+      --green-700: #276245;
+      --green-600: #2D6A4F;
+      --green-100: #D8F3DC;
+      --green-50:  #F0FAF2;
+
+      --amber-600: #C8610A;
+      --amber-500: #D97706;
+      --amber-400: #F59E0B;
+      --amber-100: #FEF3C7;
+      --amber-50:  #FFFBEB;
+
+      --cream:     #FAF7F2;
+      --parchment: #F2EDE4;
+      --sand:      #E8E0D4;
+
+      --ink-900:   #1C1510;
+      --ink-800:   #2E2418;
+      --ink-600:   #5C4A3A;
+      --ink-400:   #8B7355;
+      --ink-200:   #C4B49A;
+      --ink-100:   #E8DDD0;
+
+      --code-bg:   #1A2332;
+      --code-text: #E2E8F0;
+      --code-accent: #68D391;
+      --code-string: #FBD38D;
+      --code-comment: #718096;
+
+      --sidebar-w: 280px;
+      --content-max: 860px;
+      --radius:  8px;
+      --radius-lg: 14px;
+      --shadow-sm: 0 1px 3px rgba(0,0,0,.08), 0 1px 2px rgba(0,0,0,.05);
+      --shadow-md: 0 4px 16px rgba(0,0,0,.10), 0 2px 6px rgba(0,0,0,.06);
+      --shadow-lg: 0 12px 40px rgba(0,0,0,.14);
+
+      --transition: 0.2s ease;
+    }
+
+    /* =============================================
+       RESET & BASE
+    ============================================= */
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+    html { scroll-behavior: smooth; font-size: 16px; }
+
+    body {
+      font-family: 'Source Serif 4', Georgia, serif;
+      background: var(--cream);
+      color: var(--ink-900);
+      line-height: 1.75;
+      -webkit-font-smoothing: antialiased;
+    }
+
+    a { color: var(--green-700); text-decoration: none; }
+    a:hover { color: var(--amber-600); text-decoration: underline; }
+
+    img { max-width: 100%; height: auto; display: block; }
+
+    code, kbd {
+      font-family: 'JetBrains Mono', 'Courier New', monospace;
+      font-size: .875em;
+    }
+
+    /* =============================================
+       TOP HEADER / HERO
+    ============================================= */
+    .site-hero {
+      background: var(--green-800);
+      background-image:
+        radial-gradient(ellipse 80% 60% at 70% 50%, rgba(39,98,69,.55) 0%, transparent 70%),
+        repeating-linear-gradient(
+          -30deg,
+          transparent,
+          transparent 40px,
+          rgba(255,255,255,.018) 40px,
+          rgba(255,255,255,.018) 41px
+        );
+      color: #fff;
+      padding: 60px 40px 56px;
+      position: relative;
+      overflow: hidden;
+    }
+
+    .site-hero::before {
+      content: '';
+      position: absolute;
+      inset: 0;
+      background: url("data:image/svg+xml,%3Csvg width='60' height='60' viewBox='0 0 60 60' xmlns='http://www.w3.org/2000/svg'%3E%3Cg fill='none' fill-rule='evenodd'%3E%3Cg fill='%23ffffff' fill-opacity='0.025'%3E%3Cpath d='M36 34v-4h-2v4h-4v2h4v4h2v-4h4v-2h-4zm0-30V0h-2v4h-4v2h4v4h2V6h4V4h-4zM6 34v-4H4v4H0v2h4v4h2v-4h4v-2H6zM6 4V0H4v4H0v2h4v4h2V6h4V4H6z'/%3E%3C/g%3E%3C/g%3E%3C/svg%3E");
+      pointer-events: none;
+    }
+
+    .hero-inner {
+      max-width: 1160px;
+      margin: 0 auto;
+      position: relative;
+      z-index: 1;
+    }
+
+    .hero-badge {
+      display: inline-flex;
+      align-items: center;
+      gap: 7px;
+      background: rgba(255,255,255,.12);
+      border: 1px solid rgba(255,255,255,.22);
+      color: #A7F3D0;
+      font-family: 'JetBrains Mono', monospace;
+      font-size: .72rem;
+      letter-spacing: .1em;
+      text-transform: uppercase;
+      padding: 5px 14px;
+      border-radius: 100px;
+      margin-bottom: 22px;
+    }
+
+    .hero-badge::before { content: '▶'; font-size: .65rem; }
+
+    .site-hero h1 {
+      font-family: 'Playfair Display', Georgia, serif;
+      font-size: clamp(2rem, 4.5vw, 3.4rem);
+      font-weight: 700;
+      line-height: 1.15;
+      color: #fff;
+      max-width: 680px;
+      margin-bottom: 18px;
+      letter-spacing: -.02em;
+    }
+
+    .site-hero h1 em {
+      font-style: italic;
+      color: #FCD34D;
+    }
+
+    .hero-sub {
+      font-size: 1.1rem;
+      color: rgba(255,255,255,.78);
+      max-width: 580px;
+      margin-bottom: 34px;
+      font-weight: 300;
+      line-height: 1.65;
+    }
+
+    .hero-meta {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 20px;
+      margin-bottom: 36px;
+    }
+
+    .hero-meta-item {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      color: rgba(255,255,255,.75);
+      font-size: .88rem;
+      font-family: 'Source Serif 4', serif;
+    }
+
+    .hero-meta-item .icon {
+      width: 32px;
+      height: 32px;
+      background: rgba(255,255,255,.12);
+      border-radius: 8px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 1rem;
+    }
+
+    .hero-actions {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 12px;
+      align-items: center;
+    }
+
+    .btn {
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      padding: 11px 22px;
+      border-radius: var(--radius);
+      font-family: 'Source Serif 4', serif;
+      font-size: .92rem;
+      font-weight: 600;
+      cursor: pointer;
+      border: none;
+      transition: all var(--transition);
+      text-decoration: none !important;
+    }
+
+    .btn-primary {
+      background: var(--amber-500);
+      color: #fff;
+      box-shadow: 0 2px 8px rgba(217,119,6,.35);
+    }
+
+    .btn-primary:hover {
+      background: var(--amber-600);
+      color: #fff;
+      transform: translateY(-1px);
+      box-shadow: 0 4px 16px rgba(217,119,6,.45);
+    }
+
+    .btn-outline {
+      background: rgba(255,255,255,.1);
+      color: #fff;
+      border: 1px solid rgba(255,255,255,.3);
+    }
+
+    .btn-outline:hover {
+      background: rgba(255,255,255,.18);
+      color: #fff;
+      transform: translateY(-1px);
+    }
+
+    /* =============================================
+       LAYOUT SHELL
+    ============================================= */
+    .layout {
+      display: flex;
+      max-width: 1160px;
+      margin: 0 auto;
+      padding: 0 20px;
+      gap: 48px;
+      align-items: flex-start;
+    }
+
+    /* =============================================
+       SIDEBAR / TABLE OF CONTENTS
+    ============================================= */
+    .sidebar {
+      width: var(--sidebar-w);
+      flex-shrink: 0;
+      position: sticky;
+      top: 24px;
+      max-height: calc(100vh - 48px);
+      overflow-y: auto;
+      padding: 28px 0 40px;
+      scrollbar-width: thin;
+      scrollbar-color: var(--sand) transparent;
+    }
+
+    .sidebar::-webkit-scrollbar { width: 4px; }
+    .sidebar::-webkit-scrollbar-thumb { background: var(--sand); border-radius: 4px; }
+
+    .toc-header {
+      font-family: 'JetBrains Mono', monospace;
+      font-size: .7rem;
+      letter-spacing: .12em;
+      text-transform: uppercase;
+      color: var(--ink-400);
+      padding: 0 20px 14px;
+      border-bottom: 1px solid var(--sand);
+      margin-bottom: 14px;
+    }
+
+    .toc-list {
+      list-style: none;
+    }
+
+    .toc-list li a {
+      display: flex;
+      align-items: flex-start;
+      gap: 10px;
+      padding: 6px 20px;
+      font-size: .85rem;
+      color: var(--ink-600);
+      line-height: 1.4;
+      border-left: 3px solid transparent;
+      transition: all var(--transition);
+    }
+
+    .toc-list li a:hover,
+    .toc-list li a.active {
+      color: var(--green-700);
+      border-left-color: var(--green-600);
+      background: var(--green-50);
+      text-decoration: none;
+    }
+
+    .toc-num {
+      font-family: 'JetBrains Mono', monospace;
+      font-size: .72rem;
+      color: var(--ink-200);
+      min-width: 22px;
+      padding-top: 1px;
+    }
+
+    .toc-list li a:hover .toc-num,
+    .toc-list li a.active .toc-num {
+      color: var(--green-600);
+    }
+
+    .toc-progress {
+      margin: 20px 20px 0;
+      background: var(--sand);
+      height: 3px;
+      border-radius: 3px;
+      overflow: hidden;
+    }
+
+    .toc-progress-bar {
+      height: 100%;
+      background: linear-gradient(90deg, var(--green-600), var(--amber-500));
+      width: 0%;
+      transition: width .3s ease;
+      border-radius: 3px;
+    }
+
+    .toc-progress-label {
+      font-family: 'JetBrains Mono', monospace;
+      font-size: .68rem;
+      color: var(--ink-400);
+      margin: 6px 20px 0;
+    }
+
+    /* =============================================
+       MAIN CONTENT AREA
+    ============================================= */
+    .content {
+      flex: 1;
+      min-width: 0;
+      padding: 40px 0 80px;
+      max-width: var(--content-max);
+    }
+
+    /* Section anchors */
+    .section {
+      margin-bottom: 72px;
+      scroll-margin-top: 30px;
+    }
+
+    .section-header {
+      display: flex;
+      align-items: center;
+      gap: 16px;
+      margin-bottom: 28px;
+      padding-bottom: 18px;
+      border-bottom: 2px solid var(--sand);
+    }
+
+    .section-num {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      width: 46px;
+      height: 46px;
+      background: var(--green-800);
+      color: #fff;
+      font-family: 'JetBrains Mono', monospace;
+      font-size: .9rem;
+      font-weight: 500;
+      border-radius: var(--radius);
+      flex-shrink: 0;
+    }
+
+    .section-title {
+      font-family: 'Playfair Display', Georgia, serif;
+      font-size: 1.75rem;
+      font-weight: 700;
+      color: var(--ink-900);
+      line-height: 1.25;
+      letter-spacing: -.02em;
+    }
+
+    h2 {
+      font-family: 'Playfair Display', Georgia, serif;
+      font-size: 1.4rem;
+      font-weight: 700;
+      color: var(--green-800);
+      margin: 36px 0 14px;
+      letter-spacing: -.015em;
+      line-height: 1.3;
+    }
+
+    h3 {
+      font-family: 'Source Serif 4', serif;
+      font-size: 1.1rem;
+      font-weight: 600;
+      color: var(--ink-800);
+      margin: 26px 0 10px;
+      letter-spacing: -.01em;
+    }
+
+    p { margin-bottom: 16px; }
+    p:last-child { margin-bottom: 0; }
+
+    ul, ol {
+      margin: 12px 0 18px 24px;
+      line-height: 1.75;
+    }
+
+    li { margin-bottom: 5px; }
+
+    strong { color: var(--ink-800); font-weight: 600; }
+
+    /* =============================================
+       STEP CARDS
+    ============================================= */
+    .step-card {
+      background: #fff;
+      border: 1px solid var(--sand);
+      border-radius: var(--radius-lg);
+      padding: 24px 28px;
+      margin: 24px 0;
+      position: relative;
+      box-shadow: var(--shadow-sm);
+    }
+
+    .step-card-header {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      margin-bottom: 16px;
+    }
+
+    .step-badge {
+      background: var(--green-800);
+      color: #fff;
+      font-family: 'JetBrains Mono', monospace;
+      font-size: .72rem;
+      letter-spacing: .08em;
+      padding: 3px 10px;
+      border-radius: 100px;
+      white-space: nowrap;
+    }
+
+    .step-card-title {
+      font-family: 'Source Serif 4', serif;
+      font-size: 1rem;
+      font-weight: 600;
+      color: var(--ink-800);
+    }
+
+    .step-card ol {
+      margin: 0 0 0 20px;
+      counter-reset: step-counter;
+    }
+
+    .step-card ol li {
+      margin-bottom: 8px;
+      font-size: .95rem;
+      color: var(--ink-600);
+    }
+
+    /* =============================================
+       NOTE BOXES (formerly Teaching Notes)
+    ============================================= */
+    .note-box {
+      display: flex;
+      gap: 14px;
+      background: var(--amber-50);
+      border: 1px solid var(--amber-100);
+      border-left: 4px solid var(--amber-500);
+      border-radius: var(--radius);
+      padding: 16px 20px;
+      margin: 20px 0;
+    }
+
+    .note-icon {
+      font-size: 1.2rem;
+      flex-shrink: 0;
+      margin-top: 2px;
+    }
+
+    .note-content { flex: 1; }
+
+    .note-label {
+      font-family: 'JetBrains Mono', monospace;
+      font-size: .7rem;
+      letter-spacing: .1em;
+      text-transform: uppercase;
+      color: var(--amber-600);
+      font-weight: 600;
+      margin-bottom: 5px;
+    }
+
+    .note-content p {
+      font-size: .92rem;
+      color: var(--ink-700, #3D2E1E);
+      margin-bottom: 0;
+      line-height: 1.65;
+    }
+
+    .note-box.warning { border-left-color: #DC2626; background: #FEF2F2; }
+    .note-box.warning .note-label { color: #DC2626; }
+
+    .note-box.success { border-left-color: var(--green-600); background: var(--green-50); }
+    .note-box.success .note-label { color: var(--green-700); }
+
+    .note-box.info { border-left-color: #2563EB; background: #EFF6FF; }
+    .note-box.info .note-label { color: #2563EB; }
+
+    /* =============================================
+       TABLES
+    ============================================= */
+    .table-wrap {
+      overflow-x: auto;
+      margin: 20px 0;
+      border-radius: var(--radius-lg);
+      box-shadow: var(--shadow-sm);
+    }
+
+    table {
+      width: 100%;
+      border-collapse: collapse;
+      background: #fff;
+      font-size: .9rem;
+    }
+
+    thead {
+      background: var(--green-800);
+      color: #fff;
+    }
+
+    thead th {
+      padding: 12px 18px;
+      text-align: left;
+      font-family: 'Source Serif 4', serif;
+      font-weight: 600;
+      font-size: .85rem;
+      letter-spacing: .02em;
+      white-space: nowrap;
+    }
+
+    tbody tr { border-bottom: 1px solid var(--sand); }
+    tbody tr:last-child { border-bottom: none; }
+    tbody tr:nth-child(even) { background: var(--parchment); }
+
+    td {
+      padding: 11px 18px;
+      vertical-align: top;
+      line-height: 1.55;
+      color: var(--ink-700, #3A2E20);
+    }
+
+    td code {
+      background: var(--parchment);
+      border: 1px solid var(--sand);
+      padding: 1px 6px;
+      border-radius: 4px;
+      font-size: .82em;
+      color: var(--green-700);
+    }
+
+    /* =============================================
+       CODE BLOCKS
+    ============================================= */
+    .code-block {
+      background: var(--code-bg);
+      border-radius: var(--radius-lg);
+      overflow: hidden;
+      margin: 20px 0;
+      box-shadow: var(--shadow-md);
+    }
+
+    .code-header {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: 10px 18px;
+      background: rgba(255,255,255,.05);
+      border-bottom: 1px solid rgba(255,255,255,.07);
+    }
+
+    .code-lang {
+      font-family: 'JetBrains Mono', monospace;
+      font-size: .7rem;
+      letter-spacing: .1em;
+      text-transform: uppercase;
+      color: var(--code-accent);
+    }
+
+    .code-dots {
+      display: flex;
+      gap: 6px;
+    }
+
+    .code-dots span {
+      width: 10px;
+      height: 10px;
+      border-radius: 50%;
+    }
+
+    .code-dots span:nth-child(1) { background: #FF5F57; }
+    .code-dots span:nth-child(2) { background: #FFBD2E; }
+    .code-dots span:nth-child(3) { background: #28CA41; }
+
+    .code-body {
+      padding: 20px;
+      overflow-x: auto;
+    }
+
+    .code-body pre {
+      font-family: 'JetBrains Mono', monospace;
+      font-size: .82rem;
+      line-height: 1.7;
+      color: var(--code-text);
+      white-space: pre;
+      tab-size: 2;
+    }
+
+    .code-body pre .c { color: var(--code-comment); font-style: italic; }
+    .code-body pre .s { color: var(--code-string); }
+    .code-body pre .k { color: #81E6D9; }
+    .code-body pre .v { color: #FBD38D; }
+
+    /* =============================================
+       PLUGIN CARDS GRID
+    ============================================= */
+    .plugin-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(240px, 1fr));
+      gap: 16px;
+      margin: 24px 0;
+    }
+
+    .plugin-card {
+      background: #fff;
+      border: 1px solid var(--sand);
+      border-radius: var(--radius-lg);
+      padding: 20px;
+      transition: all var(--transition);
+      box-shadow: var(--shadow-sm);
+    }
+
+    .plugin-card:hover {
+      border-color: var(--green-600);
+      box-shadow: var(--shadow-md);
+      transform: translateY(-2px);
+    }
+
+    .plugin-icon {
+      width: 44px;
+      height: 44px;
+      border-radius: 10px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 1.4rem;
+      margin-bottom: 14px;
+    }
+
+    .plugin-name {
+      font-family: 'Source Serif 4', serif;
+      font-weight: 600;
+      font-size: .95rem;
+      color: var(--ink-900);
+      margin-bottom: 5px;
+    }
+
+    .plugin-purpose {
+      font-size: .82rem;
+      color: var(--ink-400);
+      line-height: 1.5;
+      margin-bottom: 12px;
+    }
+
+    .plugin-tag {
+      display: inline-block;
+      background: var(--green-50);
+      color: var(--green-700);
+      border: 1px solid var(--green-100);
+      font-family: 'JetBrains Mono', monospace;
+      font-size: .68rem;
+      letter-spacing: .05em;
+      padding: 2px 8px;
+      border-radius: 100px;
+    }
+
+    /* =============================================
+       CHECKLIST
+    ============================================= */
+    .checklist {
+      list-style: none;
+      margin: 0 0 20px;
+      display: grid;
+      gap: 8px;
+    }
+
+    .checklist li {
+      display: flex;
+      align-items: flex-start;
+      gap: 12px;
+      padding: 10px 16px;
+      background: #fff;
+      border: 1px solid var(--sand);
+      border-radius: var(--radius);
+      font-size: .92rem;
+      color: var(--ink-700, #3A2E20);
+    }
+
+    .checklist li::before {
+      content: '☐';
+      font-size: 1.1rem;
+      color: var(--green-600);
+      flex-shrink: 0;
+      margin-top: -1px;
+    }
+
+    .checklist.done li::before { content: '☑'; color: var(--green-600); }
+
+    /* =============================================
+       MOCKUPS / BROWSER FRAMES
+    ============================================= */
+    .mockup-wrap {
+      margin: 28px 0;
+    }
+
+    .mockup-label {
+      font-family: 'JetBrains Mono', monospace;
+      font-size: .72rem;
+      letter-spacing: .1em;
+      text-transform: uppercase;
+      color: var(--ink-400);
+      margin-bottom: 10px;
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
+
+    .mockup-label::before { content: ''; flex: 1; height: 1px; background: var(--sand); }
+    .mockup-label::after  { content: ''; flex: 1; height: 1px; background: var(--sand); }
+
+    .browser-frame {
+      background: #fff;
+      border-radius: var(--radius-lg);
+      overflow: hidden;
+      box-shadow: var(--shadow-lg);
+      border: 1px solid var(--sand);
+    }
+
+    .browser-bar {
+      background: #F1F3F4;
+      border-bottom: 1px solid #DDE0E3;
+      padding: 10px 16px;
+      display: flex;
+      align-items: center;
+      gap: 14px;
+    }
+
+    .browser-dots { display: flex; gap: 6px; }
+    .browser-dots span {
+      width: 10px; height: 10px;
+      border-radius: 50%;
+    }
+
+    .browser-dots span:nth-child(1) { background: #FF5F57; }
+    .browser-dots span:nth-child(2) { background: #FEBC2E; }
+    .browser-dots span:nth-child(3) { background: #28C840; }
+
+    .browser-url {
+      flex: 1;
+      background: #fff;
+      border: 1px solid #DDE0E3;
+      border-radius: 6px;
+      padding: 4px 12px;
+      font-family: 'JetBrains Mono', monospace;
+      font-size: .75rem;
+      color: #555;
+    }
+
+    /* ─── WP Dashboard Mockup ─── */
+    .wp-mockup {
+      display: flex;
+      min-height: 340px;
+      font-size: .78rem;
+    }
+
+    .wp-sidebar-mock {
+      width: 160px;
+      background: #23282D;
+      color: #eee;
+      flex-shrink: 0;
+      padding: 10px 0;
+    }
+
+    .wp-sidebar-mock .wp-logo {
+      text-align: center;
+      padding: 10px;
+      margin-bottom: 10px;
+    }
+
+    .wp-sidebar-mock .wp-logo svg {
+      width: 28px;
+      height: 28px;
+      fill: #fff;
+      opacity: .6;
+    }
+
+    .wp-menu-item {
+      padding: 8px 14px;
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      cursor: default;
+      font-size: .75rem;
+      color: #ccc;
+      border-left: 3px solid transparent;
+    }
+
+    .wp-menu-item.active {
+      background: #0073AA;
+      border-left-color: #00A0D2;
+      color: #fff;
+    }
+
+    .wp-menu-item .mi-icon { font-size: .9rem; width: 18px; text-align: center; }
+
+    .wp-content-mock {
+      flex: 1;
+      background: #F1F1F1;
+      padding: 16px;
+      overflow: hidden;
+    }
+
+    .wp-topbar {
+      background: #23282D;
+      color: #eee;
+      height: 32px;
+      display: flex;
+      align-items: center;
+      padding: 0 12px;
+      gap: 16px;
+      font-size: .7rem;
+      margin: -16px -16px 16px;
+    }
+
+    .wp-topbar-item { opacity: .7; }
+    .wp-topbar-item.wp-site { opacity: 1; color: #00B9EB; }
+
+    .wp-welcome-box {
+      background: #fff;
+      border: 1px solid #ccd0d4;
+      padding: 14px;
+      margin-bottom: 12px;
+      border-radius: 3px;
+    }
+
+    .wp-welcome-box h4 {
+      font-size: .82rem;
+      color: #1d2327;
+      margin-bottom: 6px;
+      font-family: -apple-system, sans-serif;
+    }
+
+    .wp-welcome-box p {
+      font-size: .72rem;
+      color: #646970;
+      margin: 0;
+      line-height: 1.5;
+    }
+
+    .wp-stats-row {
+      display: flex;
+      gap: 10px;
+    }
+
+    .wp-stat {
+      flex: 1;
+      background: #fff;
+      border: 1px solid #ccd0d4;
+      padding: 12px;
+      border-radius: 3px;
+      text-align: center;
+    }
+
+    .wp-stat-num {
+      font-size: 1.5rem;
+      font-weight: 700;
+      color: #1d2327;
+      font-family: -apple-system, sans-serif;
+      display: block;
+    }
+
+    .wp-stat-label {
+      font-size: .68rem;
+      color: #646970;
+      font-family: -apple-system, sans-serif;
+    }
+
+    /* ─── Classic Editor Mockup ─── */
+    .editor-mockup {
+      padding: 16px;
+      background: #F0F0F1;
+    }
+
+    .editor-inner {
+      background: #fff;
+      border: 1px solid #ccd0d4;
+      border-radius: 3px;
+      overflow: hidden;
+    }
+
+    .editor-title-area {
+      padding: 12px 16px;
+      border-bottom: 1px solid #ddd;
+    }
+
+    .editor-title-input {
+      width: 100%;
+      font-family: Georgia, serif;
+      font-size: 1.1rem;
+      color: #1d2327;
+      border: 1px solid #ddd;
+      padding: 8px 12px;
+      border-radius: 3px;
+      background: #fafafa;
+    }
+
+    .editor-toolbar {
+      background: #f6f7f7;
+      border-bottom: 1px solid #ddd;
+      padding: 6px 10px;
+      display: flex;
+      flex-wrap: wrap;
+      gap: 4px;
+    }
+
+    .editor-toolbar-btn {
+      background: #fff;
+      border: 1px solid #ccc;
+      padding: 3px 7px;
+      font-size: .7rem;
+      border-radius: 2px;
+      cursor: default;
+      color: #333;
+      font-family: -apple-system, sans-serif;
+    }
+
+    .editor-body {
+      padding: 16px;
+      min-height: 120px;
+      font-family: Georgia, serif;
+      font-size: .85rem;
+      line-height: 1.7;
+      color: #333;
+    }
+
+    .editor-body h2 {
+      font-size: 1rem;
+      color: #1d2327;
+      margin: 10px 0 6px;
+    }
+
+    .editor-meta {
+      padding: 12px 16px;
+      background: #f6f7f7;
+      border-top: 1px solid #ddd;
+      display: flex;
+      gap: 12px;
+      flex-wrap: wrap;
+    }
+
+    .editor-meta-item {
+      font-family: -apple-system, sans-serif;
+      font-size: .72rem;
+      color: #646970;
+    }
+
+    .editor-meta-item strong {
+      color: #1d2327;
+      display: block;
+      margin-bottom: 3px;
+    }
+
+    .editor-meta-tag {
+      display: inline-block;
+      background: #e5e5e5;
+      padding: 1px 6px;
+      border-radius: 2px;
+      font-size: .68rem;
+    }
+
+    /* ─── Frontend Post Mockup ─── */
+    .post-mockup {
+      padding: 24px;
+      font-family: 'Source Serif 4', serif;
+    }
+
+    .post-mockup-nav {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding-bottom: 14px;
+      border-bottom: 1px solid #e5e7eb;
+      margin-bottom: 20px;
+    }
+
+    .post-mockup-logo {
+      font-family: 'Playfair Display', serif;
+      font-weight: 700;
+      font-size: 1.1rem;
+      color: #1B4332;
+    }
+
+    .post-mockup-nav-links {
+      display: flex;
+      gap: 18px;
+      font-size: .78rem;
+      color: #6B7280;
+    }
+
+    .post-hero-img {
+      width: 100%;
+      height: 140px;
+      background: linear-gradient(135deg, #1B4332 0%, #2D6A4F 50%, #D97706 100%);
+      border-radius: 6px;
+      margin-bottom: 16px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      color: rgba(255,255,255,.4);
+      font-size: .8rem;
+      letter-spacing: .05em;
+      font-family: 'JetBrains Mono', monospace;
+      position: relative;
+      overflow: hidden;
+    }
+
+    .post-hero-img::after {
+      content: '🍞';
+      font-size: 3rem;
+      position: absolute;
+      opacity: .15;
+      right: 24px;
+      bottom: 10px;
+    }
+
+    .post-cat-tag {
+      display: inline-block;
+      background: #FEF3C7;
+      color: #92400E;
+      font-size: .72rem;
+      padding: 2px 10px;
+      border-radius: 100px;
+      margin-bottom: 10px;
+      font-family: 'JetBrains Mono', monospace;
+      letter-spacing: .05em;
+    }
+
+    .post-mockup h2 {
+      font-size: 1.2rem;
+      color: #111827;
+      line-height: 1.3;
+      margin: 0 0 10px;
+    }
+
+    .post-byline {
+      font-size: .75rem;
+      color: #9CA3AF;
+      margin-bottom: 14px;
+      font-family: 'JetBrains Mono', monospace;
+    }
+
+    .post-body-text {
+      font-size: .82rem;
+      line-height: 1.7;
+      color: #374151;
+    }
+
+    /* ─── Elementor Mockup ─── */
+    .elementor-mockup {
+      display: flex;
+      background: #EDEFF0;
+      min-height: 300px;
+    }
+
+    .el-left-panel {
+      width: 200px;
+      background: #1F2833;
+      color: #eee;
+      flex-shrink: 0;
+    }
+
+    .el-panel-header {
+      padding: 10px 14px;
+      border-bottom: 1px solid rgba(255,255,255,.1);
+      font-size: .72rem;
+      color: #A0B0C0;
+      letter-spacing: .08em;
+      text-transform: uppercase;
+      font-family: -apple-system, sans-serif;
+    }
+
+    .el-widget-item {
+      padding: 8px 14px;
+      font-size: .74rem;
+      color: #C8D6E5;
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      border-bottom: 1px solid rgba(255,255,255,.05);
+      cursor: default;
+      font-family: -apple-system, sans-serif;
+    }
+
+    .el-widget-item .wi { font-size: .9rem; width: 18px; text-align: center; }
+
+    .el-canvas {
+      flex: 1;
+      padding: 16px;
+    }
+
+    .el-section {
+      background: #fff;
+      border: 2px dashed #92b3d4;
+      border-radius: 4px;
+      padding: 14px;
+      margin-bottom: 10px;
+      position: relative;
+    }
+
+    .el-section-label {
+      position: absolute;
+      top: -10px;
+      left: 12px;
+      background: #5B9BD5;
+      color: #fff;
+      font-size: .65rem;
+      padding: 1px 8px;
+      border-radius: 3px;
+      font-family: -apple-system, sans-serif;
+    }
+
+    .el-row { display: flex; gap: 10px; }
+    .el-col { flex: 1; }
+
+    .el-widget-block {
+      background: #EBF5FF;
+      border: 1px solid #B3D4F0;
+      border-radius: 3px;
+      padding: 8px 10px;
+      font-size: .7rem;
+      color: #2960A0;
+      font-family: -apple-system, sans-serif;
+      margin-bottom: 6px;
+      min-height: 28px;
+    }
+
+    .el-widget-block.hero-block {
+      background: linear-gradient(135deg, #1B4332, #2D6A4F);
+      color: rgba(255,255,255,.9);
+      border-color: transparent;
+      min-height: 60px;
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+      padding: 12px;
+    }
+
+    .el-widget-block.hero-block h3 {
+      font-size: .8rem;
+      color: #fff;
+      margin: 0 0 4px;
+    }
+
+    .el-widget-block.hero-block p {
+      font-size: .65rem;
+      color: rgba(255,255,255,.7);
+      margin: 0;
+    }
+
+    /* =============================================
+       SCHEDULE TABLE (Week Plan)
+    ============================================= */
+    .week-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(220px, 1fr));
+      gap: 12px;
+      margin: 24px 0;
+    }
+
+    .week-card {
+      background: #fff;
+      border: 1px solid var(--sand);
+      border-radius: var(--radius-lg);
+      padding: 16px 18px;
+      border-top: 4px solid var(--green-600);
+    }
+
+    .week-num {
+      font-family: 'JetBrains Mono', monospace;
+      font-size: .72rem;
+      color: var(--green-600);
+      letter-spacing: .08em;
+      text-transform: uppercase;
+      margin-bottom: 6px;
+    }
+
+    .week-card ul {
+      margin: 0;
+      padding-left: 18px;
+      font-size: .83rem;
+      color: var(--ink-600);
+    }
+
+    /* =============================================
+       CONTENT SAMPLE BOXES
+    ============================================= */
+    .content-sample {
+      background: #FDFAF6;
+      border: 1px solid var(--sand);
+      border-left: 4px solid var(--amber-400);
+      border-radius: var(--radius);
+      padding: 20px 24px;
+      margin: 20px 0;
+    }
+
+    .content-sample-header {
+      font-family: 'JetBrains Mono', monospace;
+      font-size: .72rem;
+      letter-spacing: .1em;
+      text-transform: uppercase;
+      color: var(--amber-600);
+      margin-bottom: 12px;
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
+
+    .content-sample h3 {
+      font-family: 'Playfair Display', serif;
+      font-size: 1.15rem;
+      color: var(--ink-900);
+      margin: 0 0 10px;
+    }
+
+    .content-sample p {
+      font-size: .9rem;
+      color: var(--ink-600);
+      line-height: 1.7;
+    }
+
+    /* =============================================
+       RESOURCE SUMMARY SECTION
+    ============================================= */
+    .resource-grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 20px;
+      margin: 24px 0;
+    }
+
+    .resource-box {
+      background: #fff;
+      border: 1px solid var(--sand);
+      border-radius: var(--radius-lg);
+      overflow: hidden;
+    }
+
+    .resource-box-header {
+      background: var(--green-800);
+      color: #fff;
+      padding: 12px 18px;
+      font-family: 'Source Serif 4', serif;
+      font-weight: 600;
+      font-size: .9rem;
+    }
+
+    .resource-box ul {
+      list-style: none;
+      margin: 0;
+      padding: 10px 0;
+    }
+
+    .resource-box li {
+      padding: 7px 18px;
+      border-bottom: 1px solid var(--parchment);
+      font-size: .85rem;
+      color: var(--ink-600);
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
+
+    .resource-box li:last-child { border-bottom: none; }
+    .resource-box li::before { content: '→'; color: var(--green-600); font-size: .8rem; }
+
+    /* =============================================
+       SECTION DIVIDER
+    ============================================= */
+    .section-divider {
+      display: flex;
+      align-items: center;
+      gap: 16px;
+      margin: 56px 0 40px;
+    }
+
+    .section-divider-line {
+      flex: 1;
+      height: 1px;
+      background: linear-gradient(90deg, transparent, var(--sand), transparent);
+    }
+
+    .section-divider-icon { color: var(--ink-200); font-size: 1.2rem; }
+
+    /* =============================================
+       DOWNLOAD / CTA BAR
+    ============================================= */
+    .cta-bar {
+      background: linear-gradient(135deg, var(--green-800) 0%, var(--green-700) 100%);
+      border-radius: var(--radius-lg);
+      padding: 28px 32px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 24px;
+      margin: 40px 0;
+      flex-wrap: wrap;
+    }
+
+    .cta-bar-text h3 {
+      font-family: 'Playfair Display', serif;
+      font-size: 1.2rem;
+      color: #fff;
+      margin-bottom: 5px;
+    }
+
+    .cta-bar-text p {
+      font-size: .88rem;
+      color: rgba(255,255,255,.7);
+      margin: 0;
+    }
+
+    .btn-download {
+      background: var(--amber-500);
+      color: #fff;
+      padding: 13px 26px;
+      border-radius: var(--radius);
+      font-family: 'Source Serif 4', serif;
+      font-weight: 600;
+      font-size: .95rem;
+      cursor: pointer;
+      border: none;
+      display: inline-flex;
+      align-items: center;
+      gap: 9px;
+      white-space: nowrap;
+      transition: all var(--transition);
+      box-shadow: 0 3px 12px rgba(0,0,0,.25);
+      text-decoration: none !important;
+    }
+
+    .btn-download:hover {
+      background: var(--amber-600);
+      color: #fff;
+      transform: translateY(-1px);
+      box-shadow: 0 5px 18px rgba(0,0,0,.3);
+    }
+
+    /* =============================================
+       FOOTER
+    ============================================= */
+    .site-footer {
+      background: var(--green-900);
+      color: rgba(255,255,255,.55);
+      text-align: center;
+      padding: 32px 24px;
+      font-size: .82rem;
+      line-height: 1.6;
+    }
+
+    .site-footer strong { color: rgba(255,255,255,.85); }
+
+    /* =============================================
+       MOBILE TOGGLE
+    ============================================= */
+    .toc-toggle {
+      display: none;
+      position: fixed;
+      bottom: 24px;
+      right: 24px;
+      background: var(--green-800);
+      color: #fff;
+      border: none;
+      border-radius: 50%;
+      width: 52px;
+      height: 52px;
+      font-size: 1.2rem;
+      cursor: pointer;
+      box-shadow: var(--shadow-lg);
+      z-index: 100;
+      align-items: center;
+      justify-content: center;
+      transition: all var(--transition);
+    }
+
+    .toc-toggle:hover { background: var(--green-700); transform: scale(1.05); }
+
+    /* =============================================
+       PRINT / PDF STYLES
+    ============================================= */
+    @media print {
+      .sidebar, .toc-toggle, .btn-download, .cta-bar,
+      .site-hero .hero-actions, .site-footer { display: none !important; }
+
+      .layout { display: block; max-width: 100%; padding: 0; }
+      .content { padding: 0; max-width: 100%; }
+
+      body {
+        font-size: 11pt;
+        color: #000;
+        background: #fff;
+      }
+
+      .site-hero {
+        background: #1B4332 !important;
+        -webkit-print-color-adjust: exact;
+        print-color-adjust: exact;
+        padding: 30px;
+        break-after: page;
+      }
+
+      .section { break-inside: avoid; page-break-inside: avoid; }
+      .section-header { break-after: avoid; }
+
+      h2, h3 { break-after: avoid; }
+
+      .browser-frame, .step-card, .note-box,
+      .table-wrap { break-inside: avoid; }
+
+      .code-block { break-inside: avoid; overflow: hidden; }
+
+      a[href]::after {
+        content: " (" attr(href) ")";
+        font-size: .75em;
+        color: #555;
+      }
+
+      .btn[href]::after { display: none; }
+
+      thead { -webkit-print-color-adjust: exact; print-color-adjust: exact; }
+    }
+
+    /* =============================================
+       RESPONSIVE
+    ============================================= */
+    @media (max-width: 900px) {
+      .layout { flex-direction: column; gap: 0; padding: 0 16px; }
+
+      .sidebar {
+        position: fixed;
+        top: 0;
+        left: -320px;
+        width: 300px;
+        height: 100vh;
+        max-height: 100vh;
+        background: #fff;
+        border-right: 1px solid var(--sand);
+        z-index: 200;
+        padding: 20px 0;
+        box-shadow: var(--shadow-lg);
+        transition: left .3s ease;
+      }
+
+      .sidebar.open { left: 0; }
+      .toc-toggle { display: flex; }
+
+      .content { padding: 24px 0 60px; }
+
+      .wp-mockup { flex-direction: column; }
+      .wp-sidebar-mock { width: 100%; display: flex; flex-wrap: wrap; padding: 4px; }
+      .wp-menu-item { padding: 5px 8px; font-size: .68rem; }
+
+      .elementor-mockup { flex-direction: column; }
+      .el-left-panel { width: 100%; display: flex; flex-wrap: wrap; gap: 4px; padding: 8px; }
+      .el-widget-item { padding: 4px 8px; }
+
+      .resource-grid { grid-template-columns: 1fr; }
+      .plugin-grid { grid-template-columns: 1fr 1fr; }
+
+      .cta-bar { flex-direction: column; text-align: center; }
+
+      .site-hero { padding: 36px 20px 32px; }
+      .hero-meta { gap: 12px; }
+    }
+
+    @media (max-width: 520px) {
+      .plugin-grid { grid-template-columns: 1fr; }
+      .week-grid { grid-template-columns: 1fr; }
+      .hero-actions { flex-direction: column; align-items: flex-start; }
+    }
+  </style>
+</head>
+
+<body>
+
+  <!-- ============================================================
+       HERO HEADER
+  ============================================================ -->
+  <header class="site-hero">
+    <div class="hero-inner">
+      <div class="hero-badge">WordPress Full Project Course — Liberia Edition</div>
+      <h1>Build a Real WordPress Website<br/><em>From Scratch</em></h1>
+      <p class="hero-sub">
+        A comprehensive, hands-on project guide for students. Build a fully functional local business
+        website step by step — covering themes, plugins, posts, pages, menus, media, users, SEO,
+        security, and launch.
+      </p>
+      <div class="hero-meta">
+        <div class="hero-meta-item">
+          <div class="icon">📋</div>
+          <span>19 Sections &amp; Modules</span>
+        </div>
+        <div class="hero-meta-item">
+          <div class="icon">⏱️</div>
+          <span>20–30 Hours Build Time</span>
+        </div>
+        <div class="hero-meta-item">
+          <div class="icon">🌍</div>
+          <span>Localized for Liberia</span>
+        </div>
+        <div class="hero-meta-item">
+          <div class="icon">🎓</div>
+          <span>Beginner to Intermediate</span>
+        </div>
+      </div>
+      <div class="hero-actions">
+        <a href="#section-1" class="btn btn-primary">▶ Start the Guide</a>
+        <button class="btn btn-outline" onclick="window.print()">⬇ Download PDF</button>
+      </div>
+    </div>
+  </header>
+
+  <!-- PDF CTA Bar near top of content -->
+  <div style="max-width:1160px;margin:0 auto;padding:0 20px;">
+    <div class="cta-bar">
+      <div class="cta-bar-text">
+        <h3>📄 Save This Guide as a PDF</h3>
+        <p>Print or save to PDF — optimised for clean, multi-page output. Keep it for offline reference throughout your project.</p>
+      </div>
+      <button class="btn-download" onclick="window.print()">⬇ Download / Print as PDF</button>
+    </div>
+  </div>
+
+  <!-- Mobile TOC toggle -->
+  <button class="toc-toggle" id="tocToggle" aria-label="Open Table of Contents">☰</button>
+
+  <!-- ============================================================
+       MAIN LAYOUT: SIDEBAR + CONTENT
+  ============================================================ -->
+  <div class="layout">
+
+    <!-- SIDEBAR TOC -->
+    <aside class="sidebar" id="sidebar">
+      <div class="toc-header">Contents</div>
+      <nav>
+        <ul class="toc-list">
+          <li><a href="#section-1"><span class="toc-num">01</span>Prerequisites &amp; Setup</a></li>
+          <li><a href="#section-2"><span class="toc-num">02</span>Installation &amp; Config</a></li>
+          <li><a href="#section-3"><span class="toc-num">03</span>Dashboard Tour</a></li>
+          <li><a href="#section-4"><span class="toc-num">04</span>Theme Installation</a></li>
+          <li><a href="#section-5"><span class="toc-num">05</span>General Settings</a></li>
+          <li><a href="#section-6"><span class="toc-num">06</span>Media Library</a></li>
+          <li><a href="#section-7"><span class="toc-num">07</span>First Post — Classic Editor</a></li>
+          <li><a href="#section-8"><span class="toc-num">08</span>Additional Blog Posts</a></li>
+          <li><a href="#section-9"><span class="toc-num">09</span>Categories &amp; Tags</a></li>
+          <li><a href="#section-10"><span class="toc-num">10</span>Creating Pages</a></li>
+          <li><a href="#section-11"><span class="toc-num">11</span>Elementor Page Builder</a></li>
+          <li><a href="#section-12"><span class="toc-num">12</span>Essential Plugins</a></li>
+          <li><a href="#section-13"><span class="toc-num">13</span>Navigation Menus</a></li>
+          <li><a href="#section-14"><span class="toc-num">14</span>Widgets &amp; Sidebars</a></li>
+          <li><a href="#section-15"><span class="toc-num">15</span>User Management</a></li>
+          <li><a href="#section-16"><span class="toc-num">16</span>WordPress Tools</a></li>
+          <li><a href="#section-17"><span class="toc-num">17</span>SEO Optimization</a></li>
+          <li><a href="#section-18"><span class="toc-num">18</span>Security &amp; Performance</a></li>
+          <li><a href="#section-19"><span class="toc-num">19</span>Launch Checklist</a></li>
+        </ul>
+      </nav>
+      <div class="toc-progress">
+        <div class="toc-progress-bar" id="progressBar"></div>
+      </div>
+      <div class="toc-progress-label" id="progressLabel">0% complete</div>
+    </aside>
+
+    <!-- MAIN CONTENT -->
+    <main class="content">
+
+      <!-- ─── PROJECT BRIEF ─── -->
+      <div class="note-box success" style="margin-bottom:36px;">
+        <div class="note-icon">🌴</div>
+        <div class="note-content">
+          <div class="note-label">Project Concept</div>
+          <p>
+            Students will build a complete website for a fictional Monrovia bakery called
+            <strong>Sweet Palm Bakery</strong>, located on Tubman Boulevard, Sinkor, Monrovia, Liberia.
+            Starting with a blank WordPress install, students will build every section of a real small-business
+            site — homepage, about, menu, blog, contact, and more.
+          </p>
+        </div>
+      </div>
+
+
+      <!-- ========================================================
+           SECTION 1 — PREREQUISITES
+      ========================================================= -->
+      <section class="section" id="section-1">
+        <div class="section-header">
+          <div class="section-num">01</div>
+          <h1 class="section-title">Prerequisites &amp; Setup</h1>
+        </div>
+
+        <p>Before the first line of WordPress code is written, students need a working local development environment. This section ensures every student starts from the same baseline.</p>
+
+        <h2>Local Development Tools</h2>
+        <p>Choose one of the following local server tools. <strong>LocalWP is recommended</strong> for beginners because it installs WordPress automatically with zero server configuration.</p>
+
+        <div class="table-wrap">
+          <table>
+            <thead><tr><th>Tool</th><th>Platform</th><th>Best For</th></tr></thead>
+            <tbody>
+              <tr><td><strong>LocalWP</strong> ⭐ Recommended</td><td>Windows / Mac / Linux</td><td>Beginners — one-click WordPress install</td></tr>
+              <tr><td>XAMPP</td><td>Windows / Mac / Linux</td><td>Students who want manual PHP/MySQL control</td></tr>
+              <tr><td>MAMP</td><td>Mac / Windows</td><td>Mac users, slightly simpler than XAMPP</td></tr>
+              <tr><td>Laragon</td><td>Windows only</td><td>Fast lightweight option for Windows</td></tr>
+            </tbody>
+          </table>
+        </div>
+
+        <div class="step-card" id="section-1-1">
+          <div class="step-card-header">
+            <div class="step-badge">Step 1.1</div>
+            <div class="step-card-title">Install LocalWP and Create Your Site</div>
+          </div>
+          <ol>
+            <li>Download and install LocalWP from <strong>localwp.com</strong></li>
+            <li>Click <strong>"+ Create a New Site"</strong></li>
+            <li>Enter site name: <code>Sweet Palm Bakery</code></li>
+            <li>Choose <strong>"Preferred"</strong> environment (Apache, PHP 8.1, MySQL 8.0)</li>
+            <li>Set WordPress username: <code>admin</code></li>
+            <li>Set WordPress password: <code>SweetPalm2024!</code></li>
+            <li>Set WordPress email: <code>admin@sweetpalm.local</code></li>
+            <li>Click <strong>"Add Site"</strong> and wait for installation</li>
+            <li>Click <strong>"Open Site"</strong> for the frontend, or <strong>"WP Admin"</strong> for the dashboard</li>
+          </ol>
+        </div>
+
+        <div class="note-box">
+          <div class="note-icon">💡</div>
+          <div class="note-content">
+            <div class="note-label">Note</div>
+            <p>Explain to students that a "local" site lives only on their computer. When ready to go live, they'll need real web hosting. Popular options accessible from Liberia include <strong>Hostinger</strong>, <strong>Namecheap</strong>, <strong>SiteGround</strong>, and <strong>InMotion Hosting</strong>. All accept international payment and offer one-click WordPress installs.</p>
+          </div>
+        </div>
+
+        <h2>Free Accounts to Create Before Class</h2>
+        <div class="table-wrap">
+          <table>
+            <thead><tr><th>Service</th><th>Purpose</th><th>URL</th></tr></thead>
+            <tbody>
+              <tr><td><strong>WordPress.org</strong></td><td>Downloading themes &amp; plugins</td><td>wordpress.org</td></tr>
+              <tr><td><strong>Unsplash</strong></td><td>Free royalty-free images</td><td>unsplash.com</td></tr>
+              <tr><td><strong>Google Fonts</strong></td><td>Typography reference</td><td>fonts.google.com</td></tr>
+              <tr><td><strong>Flaticon</strong></td><td>Free icons &amp; SVGs</td><td>flaticon.com</td></tr>
+            </tbody>
+          </table>
+        </div>
+      </section>
+
+
+      <!-- ========================================================
+           SECTION 2 — INSTALLATION
+      ========================================================= -->
+      <section class="section" id="section-2">
+        <div class="section-header">
+          <div class="section-num">02</div>
+          <h1 class="section-title">WordPress Installation &amp; Initial Configuration</h1>
+        </div>
+
+        <h2>Option A — Using LocalWP (Recommended)</h2>
+        <p>If using LocalWP, WordPress is already installed from Section 1. Proceed directly to Section 3.</p>
+
+        <h2>Option B — One-Click Install via Hosting cPanel</h2>
+        <p>Most hosts provide <strong>Softaculous</strong> or <strong>Installatron</strong> in their cPanel for one-click installs.</p>
+
+        <div class="step-card">
+          <div class="step-card-header">
+            <div class="step-badge">Step 2.1</div>
+            <div class="step-card-title">Installing via cPanel (Live Hosting)</div>
+          </div>
+          <ol>
+            <li>Log in to your cPanel (usually at <code>yourdomain.com/cpanel</code>)</li>
+            <li>Find <strong>"Softaculous Apps Installer"</strong> or <strong>"WordPress Manager"</strong></li>
+            <li>Click <strong>"Install"</strong> next to WordPress</li>
+            <li>Fill in: Protocol (<code>https://</code>), Domain (<code>sweetpalmbakery.com</code>), leave Directory blank</li>
+            <li>Site Name: <code>Sweet Palm Bakery</code></li>
+            <li>Site Description: <code>Monrovia's Finest Artisan Bakery</code></li>
+            <li>Admin Username: <code>sweetpalm_admin</code> &nbsp; <em>(never use "admin")</em></li>
+            <li>Admin Password: strong password (20+ characters)</li>
+            <li>Admin Email: <code>owner@sweetpalmbakery.com</code></li>
+            <li>Click <strong>"Install"</strong> and access at <code>yourdomain.com/wp-admin</code></li>
+          </ol>
+        </div>
+
+        <div class="note-box warning">
+          <div class="note-icon">⚠️</div>
+          <div class="note-content">
+            <div class="note-label">Security Note</div>
+            <p>Never use <code>admin</code> as your WordPress username on a live site. It is the first username attackers try when brute-forcing login forms. Always choose a unique username during install.</p>
+          </div>
+        </div>
+      </section>
+
+
+      <!-- ========================================================
+           SECTION 3 — DASHBOARD TOUR
+      ========================================================= -->
+      <section class="section" id="section-3">
+        <div class="section-header">
+          <div class="section-num">03</div>
+          <h1 class="section-title">Dashboard Overview Tour</h1>
+        </div>
+
+        <p>Once logged in, walk students through every section of the left admin sidebar. Understanding the dashboard layout is foundational to everything that follows.</p>
+
+        <div class="mockup-wrap">
+          <div class="mockup-label">WordPress Admin Dashboard — Visual Overview</div>
+          <div class="browser-frame">
+            <div class="browser-bar">
+              <div class="browser-dots"><span></span><span></span><span></span></div>
+              <div class="browser-url">sweetpalm.local/wp-admin/</div>
+            </div>
+            <div class="wp-mockup">
+              <div class="wp-sidebar-mock">
+                <div class="wp-logo">
+                  <svg viewBox="0 0 100 100" xmlns="http://www.w3.org/2000/svg"><path d="M50 0C22.4 0 0 22.4 0 50s22.4 50 50 50 50-22.4 50-50S77.6 0 50 0zm0 8c8.7 0 16.8 2.5 23.6 6.8L13.2 73.5C9.4 66.9 7 59.2 7 50c0-23.7 19.3-43 43-43zm0 86c-8.7 0-16.8-2.5-23.6-6.8L86.8 27.5C90.6 34.1 93 41.8 93 51c0 23.7-19.3 43-43 43z"/></svg>
+                </div>
+                <div class="wp-menu-item active"><span class="mi-icon">🏠</span> Dashboard</div>
+                <div class="wp-menu-item"><span class="mi-icon">📝</span> Posts</div>
+                <div class="wp-menu-item"><span class="mi-icon">🖼️</span> Media</div>
+                <div class="wp-menu-item"><span class="mi-icon">📄</span> Pages</div>
+                <div class="wp-menu-item"><span class="mi-icon">💬</span> Comments</div>
+                <div class="wp-menu-item"><span class="mi-icon">🎨</span> Appearance</div>
+                <div class="wp-menu-item"><span class="mi-icon">🔌</span> Plugins</div>
+                <div class="wp-menu-item"><span class="mi-icon">👥</span> Users</div>
+                <div class="wp-menu-item"><span class="mi-icon">🔧</span> Tools</div>
+                <div class="wp-menu-item"><span class="mi-icon">⚙️</span> Settings</div>
+              </div>
+              <div class="wp-content-mock">
+                <div class="wp-topbar">
+                  <span class="wp-topbar-item">🏠</span>
+                  <span class="wp-topbar-item wp-site">Sweet Palm Bakery</span>
+                  <span class="wp-topbar-item">+ New</span>
+                  <span class="wp-topbar-item" style="margin-left:auto;">Howdy, admin ▾</span>
+                </div>
+                <div class="wp-welcome-box">
+                  <h4>Welcome to WordPress!</h4>
+                  <p>Ready to build your bakery website? Start by reviewing the links below to get up and running quickly.</p>
+                </div>
+                <div class="wp-stats-row">
+                  <div class="wp-stat"><span class="wp-stat-num">3</span><span class="wp-stat-label">Posts</span></div>
+                  <div class="wp-stat"><span class="wp-stat-num">6</span><span class="wp-stat-label">Pages</span></div>
+                  <div class="wp-stat"><span class="wp-stat-num">1</span><span class="wp-stat-label">Comment</span></div>
+                  <div class="wp-stat"><span class="wp-stat-num">12</span><span class="wp-stat-label">Users</span></div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <div class="note-box">
+          <div class="note-icon">💡</div>
+          <div class="note-content">
+            <div class="note-label">Note</div>
+            <p>The sidebar is contextual — plugins installed later add their own menu items. For example, Elementor, WooCommerce, and Yoast SEO each get their own dedicated menu sections after activation.</p>
+          </div>
+        </div>
+
+        <h2>Sidebar Menu Reference</h2>
+        <div class="table-wrap">
+          <table>
+            <thead><tr><th>Menu Item</th><th>What You Do Here</th></tr></thead>
+            <tbody>
+              <tr><td><strong>Dashboard</strong></td><td>Overview of site activity, quick links, updates</td></tr>
+              <tr><td><strong>Posts</strong></td><td>Write, edit, manage blog posts; create categories and tags</td></tr>
+              <tr><td><strong>Media</strong></td><td>Upload and manage images, videos, documents</td></tr>
+              <tr><td><strong>Pages</strong></td><td>Create static pages (Home, About, Contact, etc.)</td></tr>
+              <tr><td><strong>Comments</strong></td><td>Moderate and reply to post comments</td></tr>
+              <tr><td><strong>Appearance</strong></td><td>Install themes, use Customizer, manage widgets and menus</td></tr>
+              <tr><td><strong>Plugins</strong></td><td>Install, activate, deactivate, and update plugins</td></tr>
+              <tr><td><strong>Users</strong></td><td>Add team members, assign roles, edit your profile</td></tr>
+              <tr><td><strong>Tools</strong></td><td>Import/export content, site health diagnostics</td></tr>
+              <tr><td><strong>Settings</strong></td><td>General, writing, reading, discussion, permalinks</td></tr>
+            </tbody>
+          </table>
+        </div>
+      </section>
+
+
+      <!-- ========================================================
+           SECTION 4 — THEME
+      ========================================================= -->
+      <section class="section" id="section-4">
+        <div class="section-header">
+          <div class="section-num">04</div>
+          <h1 class="section-title">Theme Installation &amp; Customization</h1>
+        </div>
+
+        <p><strong>Theme to Install: Astra</strong> — the most popular free WordPress theme (used on 2+ million sites). It is lightweight, fast, and works perfectly with Elementor and other page builders.</p>
+
+        <div class="step-card">
+          <div class="step-card-header">
+            <div class="step-badge">Step 4.1</div>
+            <div class="step-card-title">Install the Astra Theme</div>
+          </div>
+          <ol>
+            <li>Go to <strong>Appearance → Themes → Add New</strong></li>
+            <li>In the search box, type: <code>Astra</code></li>
+            <li>Hover over the Astra card and click <strong>"Install"</strong></li>
+            <li>Once installed, click <strong>"Activate"</strong></li>
+          </ol>
+        </div>
+
+        <div class="step-card">
+          <div class="step-card-header">
+            <div class="step-badge">Step 4.2</div>
+            <div class="step-card-title">Install Starter Templates Plugin</div>
+          </div>
+          <ol>
+            <li>Go to <strong>Plugins → Add New</strong></li>
+            <li>Search: <code>Starter Templates</code></li>
+            <li>Install and activate <strong>"Starter Templates — Elementor, WordPress &amp; Beaver Builder Templates"</strong> by Brainstorm Force</li>
+          </ol>
+        </div>
+
+        <div class="step-card">
+          <div class="step-card-header">
+            <div class="step-badge">Step 4.3</div>
+            <div class="step-card-title">Import a Starter Template</div>
+          </div>
+          <ol>
+            <li>Go to <strong>Appearance → Starter Templates</strong></li>
+            <li>Select <strong>"Elementor"</strong> as your page builder</li>
+            <li>Browse templates — search for <code>Bakery</code> or <code>Cafe</code></li>
+            <li>Select the <strong>"Cake Shop"</strong> or <strong>"Cookie &amp; Bakery"</strong> template</li>
+            <li>Click <strong>"Import Complete Site"</strong></li>
+            <li>Check all boxes (Customizer Settings, Widgets, Content)</li>
+            <li>Click <strong>"Import"</strong> and wait</li>
+          </ol>
+        </div>
+
+        <div class="note-box warning">
+          <div class="note-icon">⚠️</div>
+          <div class="note-content">
+            <div class="note-label">Important</div>
+            <p>Importing a starter template will overwrite existing content. Always do this on a fresh installation before adding your own content.</p>
+          </div>
+        </div>
+
+        <h2>Customizer Settings</h2>
+        <p>Go to <strong>Appearance → Customize</strong> and apply the following settings for the Sweet Palm Bakery brand:</p>
+
+        <div class="table-wrap">
+          <table>
+            <thead><tr><th>Setting</th><th>Value</th><th>Location</th></tr></thead>
+            <tbody>
+              <tr><td>Primary Color</td><td><code>#8B5E3C</code> — warm palm brown</td><td>Global → Colors</td></tr>
+              <tr><td>Secondary Color</td><td><code>#F5EFE6</code> — cream</td><td>Global → Colors</td></tr>
+              <tr><td>Heading Color</td><td><code>#2C1F14</code> — dark cocoa</td><td>Global → Colors</td></tr>
+              <tr><td>Text Color</td><td><code>#4A3728</code> — medium brown</td><td>Global → Colors</td></tr>
+              <tr><td>Base Font</td><td><strong>Lato</strong> — 16px</td><td>Global → Typography</td></tr>
+              <tr><td>Heading Font</td><td><strong>Playfair Display</strong></td><td>Global → Typography</td></tr>
+              <tr><td>Site Title</td><td>Sweet Palm Bakery</td><td>Header → Site Identity</td></tr>
+              <tr><td>Tagline</td><td>Baked with Heart, Served Fresh Daily</td><td>Header → Site Identity</td></tr>
+            </tbody>
+          </table>
+        </div>
+      </section>
+
+
+      <!-- ========================================================
+           SECTION 5 — SETTINGS
+      ========================================================= -->
+      <section class="section" id="section-5">
+        <div class="section-header">
+          <div class="section-num">05</div>
+          <h1 class="section-title">General Settings Configuration</h1>
+        </div>
+
+        <h2>Settings → General</h2>
+        <div class="table-wrap">
+          <table>
+            <thead><tr><th>Field</th><th>Value</th></tr></thead>
+            <tbody>
+              <tr><td>Site Title</td><td>Sweet Palm Bakery</td></tr>
+              <tr><td>Tagline</td><td>Baked with Heart, Served Fresh Daily</td></tr>
+              <tr><td>Admin Email</td><td>owner@sweetpalmbakery.com</td></tr>
+              <tr><td>Membership</td><td>☐ Leave unchecked (no open registration)</td></tr>
+              <tr><td>New User Default Role</td><td>Subscriber</td></tr>
+              <tr><td>Site Language</td><td>English (United States)</td></tr>
+              <tr><td>Timezone</td><td>Africa/Monrovia (GMT+0, no DST)</td></tr>
+              <tr><td>Date Format</td><td>F j, Y — e.g., January 15, 2025</td></tr>
+              <tr><td>Time Format</td><td>g:i a — e.g., 8:30 am</td></tr>
+              <tr><td>Week Starts On</td><td>Monday</td></tr>
+            </tbody>
+          </table>
+        </div>
+
+        <h2>Settings → Permalinks ⚠️ Critical</h2>
+        <p>This is one of the most important settings. Configure it early — changing it later on a live site can break existing links.</p>
+
+        <div class="step-card">
+          <div class="step-card-header">
+            <div class="step-badge">Step 5.5</div>
+            <div class="step-card-title">Set Permalink Structure to "Post Name"</div>
+          </div>
+          <ol>
+            <li>Go to <strong>Settings → Permalinks</strong></li>
+            <li>Select: ✅ <strong>Post name</strong></li>
+            <li>Result: <code>sweetpalmbakery.com/cinnamon-roll-secrets/</code></li>
+            <li>Click <strong>"Save Changes"</strong></li>
+          </ol>
+        </div>
+
+        <div class="note-box">
+          <div class="note-icon">💡</div>
+          <div class="note-content">
+            <div class="note-label">Note</div>
+            <p>"Pretty Permalinks" make URLs human-readable and SEO-friendly. The default <code>?p=123</code> format is unreadable and hurts search rankings. Always configure this on Day 1 of every WordPress project.</p>
+          </div>
+        </div>
+
+        <h2>Settings → Reading</h2>
+        <div class="table-wrap">
+          <table>
+            <thead><tr><th>Field</th><th>Value</th></tr></thead>
+            <tbody>
+              <tr><td>Your homepage displays</td><td>A static page</td></tr>
+              <tr><td>Homepage</td><td>Home (select after creating the page)</td></tr>
+              <tr><td>Posts page</td><td>Blog (select after creating the page)</td></tr>
+              <tr><td>Blog pages show at most</td><td>9 posts</td></tr>
+              <tr><td>Search Engine Visibility</td><td>☐ UNCHECK when going live</td></tr>
+            </tbody>
+          </table>
+        </div>
+      </section>
+
+
+      <!-- ========================================================
+           SECTION 6 — MEDIA
+      ========================================================= -->
+      <section class="section" id="section-6">
+        <div class="section-header">
+          <div class="section-num">06</div>
+          <h1 class="section-title">Media Library — Uploading Assets</h1>
+        </div>
+
+        <p>Before building pages, gather project images. All are available free on <strong>unsplash.com</strong>.</p>
+
+        <div class="table-wrap">
+          <table>
+            <thead><tr><th>Filename</th><th>Unsplash Search Term</th><th>Usage</th></tr></thead>
+            <tbody>
+              <tr><td><code>hero-bakery.jpg</code></td><td>"bakery storefront morning"</td><td>Homepage hero</td></tr>
+              <tr><td><code>cassava-bread.jpg</code></td><td>"artisan flatbread fresh"</td><td>Products page</td></tr>
+              <tr><td><code>palm-butter-cake.jpg</code></td><td>"moist layer cake slice"</td><td>Products page</td></tr>
+              <tr><td><code>chin-chin.jpg</code></td><td>"fried dough pastry snack"</td><td>Products page</td></tr>
+              <tr><td><code>sweet-potato-rolls.jpg</code></td><td>"sweet potato dinner rolls"</td><td>Blog post</td></tr>
+              <tr><td><code>baker-kneading.jpg</code></td><td>"baker kneading dough"</td><td>About page</td></tr>
+              <tr><td><code>bakery-interior.jpg</code></td><td>"cozy cafe interior warm"</td><td>About page</td></tr>
+              <tr><td><code>holiday-pastries.jpg</code></td><td>"assorted holiday pastries tray"</td><td>Blog post</td></tr>
+            </tbody>
+          </table>
+        </div>
+
+        <div class="step-card">
+          <div class="step-card-header">
+            <div class="step-badge">Step 6.1</div>
+            <div class="step-card-title">Upload Images with Proper Alt Text</div>
+          </div>
+          <ol>
+            <li>Go to <strong>Media → Add New</strong></li>
+            <li>Click <strong>"Select Files"</strong> or drag all images at once</li>
+            <li>After uploading, click each image to add metadata:</li>
+            <li><strong>Alt Text:</strong> e.g., <em>"Fresh cassava bread loaves at Sweet Palm Bakery, Monrovia"</em></li>
+            <li><strong>Caption:</strong> Optional short caption for display under images</li>
+          </ol>
+        </div>
+
+        <div class="note-box">
+          <div class="note-icon">💡</div>
+          <div class="note-content">
+            <div class="note-label">Note</div>
+            <p>Alt text is crucial for accessibility (screen readers used by visually impaired users) and for SEO (Google uses alt text to understand image content). Make it a habit to always fill in alt text — it also demonstrates professionalism to any client.</p>
+          </div>
+        </div>
+      </section>
+
+
+      <!-- ========================================================
+           SECTION 7 — FIRST POST (CLASSIC EDITOR)
+      ========================================================= -->
+      <section class="section" id="section-7">
+        <div class="section-header">
+          <div class="section-num">07</div>
+          <h1 class="section-title">Writing Your First Post — Classic Editor</h1>
+        </div>
+
+        <p>WordPress now uses the Gutenberg Block Editor by default. For this section, we start with the <strong>Classic Editor</strong> to understand WordPress's roots and learn the foundational post-writing workflow.</p>
+
+        <div class="step-card">
+          <div class="step-card-header">
+            <div class="step-badge">Step 7.1</div>
+            <div class="step-card-title">Install the Classic Editor Plugin</div>
+          </div>
+          <ol>
+            <li>Go to <strong>Plugins → Add New</strong></li>
+            <li>Search: <code>Classic Editor</code></li>
+            <li>Install and activate <strong>"Classic Editor"</strong> by WordPress Contributors</li>
+            <li>Go to <strong>Settings → Writing</strong></li>
+            <li>Set Default editor: <strong>Classic Editor</strong></li>
+            <li>Allow users to switch editors: <strong>No</strong></li>
+          </ol>
+        </div>
+
+        <!-- Classic Editor Mockup -->
+        <div class="mockup-wrap">
+          <div class="mockup-label">Classic Editor — What Your First Post Looks Like</div>
+          <div class="browser-frame">
+            <div class="browser-bar">
+              <div class="browser-dots"><span></span><span></span><span></span></div>
+              <div class="browser-url">sweetpalm.local/wp-admin/post-new.php</div>
+            </div>
+            <div class="editor-mockup">
+              <div class="editor-inner">
+                <div class="editor-title-area">
+                  <div class="editor-title-input">5 Secrets to Our Famous Sweet Potato Rolls</div>
+                </div>
+                <div class="editor-toolbar">
+                  <div class="editor-toolbar-btn"><strong>B</strong></div>
+                  <div class="editor-toolbar-btn"><em>I</em></div>
+                  <div class="editor-toolbar-btn"><u>U</u></div>
+                  <div class="editor-toolbar-btn">H2</div>
+                  <div class="editor-toolbar-btn">H3</div>
+                  <div class="editor-toolbar-btn">≡ List</div>
+                  <div class="editor-toolbar-btn">🔗 Link</div>
+                  <div class="editor-toolbar-btn">🖼 Image</div>
+                </div>
+                <div class="editor-body">
+                  <p>Every Saturday morning, a line forms outside our door before we even flip the "Open" sign. The reason? Our legendary sweet potato rolls — pillowy, golden, and brushed with honey butter...</p>
+                  <h2>Secret #1: The Roasted Sweet Potato Method</h2>
+                  <p>Most bakeries use canned sweet potato. We never do. We roast ours in-house until caramelized...</p>
+                </div>
+                <div class="editor-meta">
+                  <div class="editor-meta-item"><strong>Category</strong><span class="editor-meta-tag">Baking Tips</span></div>
+                  <div class="editor-meta-item"><strong>Tags</strong><span class="editor-meta-tag">sweet potato</span> <span class="editor-meta-tag">bread</span></div>
+                  <div class="editor-meta-item"><strong>Status</strong> Published</div>
+                  <div class="editor-meta-item"><strong>Featured Image</strong> ✓ Set</div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <h2>Step 7.2 — Write the First Blog Post</h2>
+        <p>Go to <strong>Posts → Add New</strong> and enter the following content:</p>
+
+        <div class="content-sample">
+          <div class="content-sample-header">📄 Post 1 — Full Sample Content</div>
+          <h3>5 Secrets to Our Famous Sweet Potato Rolls</h3>
+          <p><strong>Category:</strong> Baking Tips &nbsp;|&nbsp; <strong>Tags:</strong> sweet potato, bread baking, weekend specials, Liberian baking<br/>
+          <strong>Featured Image:</strong> sweet-potato-rolls.jpg<br/>
+          <strong>Excerpt:</strong> Every Saturday morning, a line forms outside our door for our legendary sweet potato rolls. Here are the 5 secrets that make them unforgettable.</p>
+          <hr style="border:none;border-top:1px solid #e5d9c8;margin:12px 0;"/>
+          <p>Every Saturday morning, a line forms outside our door before we even flip the "Open" sign. The reason? Our legendary sweet potato rolls — pillowy, golden, and brushed with honey butter that melts the moment they come out of the oven. After years of customers begging for the recipe, we're sharing five secrets that make our rolls unforgettable.</p>
+
+          <p><strong>Secret #1: We Roast, We Never Boil</strong><br/>
+          Most bakeries use boiled or canned sweet potato. We never do. Roasting the sweet potatoes at 200°C concentrates their natural sugars, adds a subtle caramelized depth, and removes excess water. A drier potato makes a stronger, more flavorful dough.</p>
+
+          <p><strong>Secret #2: Liberian Palm Oil in the Dough</strong><br/>
+          A small measure of unrefined palm oil replaces some of the standard butter in our recipe. This gives our rolls a uniquely rich, nutty undertone that no other bakery in Monrovia can replicate. Palm oil also keeps the rolls soft for longer.</p>
+
+          <p><strong>Secret #3: Two Rises Are Non-Negotiable</strong><br/>
+          Impatient bakers cut the rise time short. We don't. Our dough rises for 90 minutes after mixing, then again for 45 minutes after shaping. Those two rises develop complex flavor and the tender, layered texture that makes you close your eyes on the first bite.</p>
+
+          <p><strong>Secret #4: Honey Butter Glaze Goes On Immediately</strong><br/>
+          Pull the rolls from the oven. Wait exactly 3 minutes. Then brush generously with honey butter while still warm. The glaze absorbs into the crust and creates a glistening, sweet shell that contrasts beautifully with the soft interior.</p>
+
+          <p><strong>Secret #5: We Use Local Liberian Honey</strong><br/>
+          We source raw forest honey from a small producer in Bong County. The floral, slightly smoky character of Liberian honey is unlike any commercially processed alternative. It makes every bite tell a story.</p>
+
+          <p><strong>Come Taste the Difference</strong><br/>
+          We bake fresh sweet potato rolls every Friday night for Saturday morning, and they typically sell out by 9:00 a.m. Visit us at 14 Tubman Boulevard, Sinkor, Monrovia, or call +231 777 123 456 to reserve yours. See you Saturday morning! 🍞</p>
+        </div>
+
+        <div class="table-wrap">
+          <table>
+            <thead><tr><th>Setting</th><th>Value</th></tr></thead>
+            <tbody>
+              <tr><td>Status</td><td>Published</td></tr>
+              <tr><td>Visibility</td><td>Public</td></tr>
+              <tr><td>Category</td><td>Baking Tips</td></tr>
+              <tr><td>Tags</td><td>sweet potato, bread baking, weekend, Liberian baking</td></tr>
+              <tr><td>Featured Image</td><td>sweet-potato-rolls.jpg</td></tr>
+              <tr><td>Allow Comments</td><td>✅ Yes</td></tr>
+            </tbody>
+          </table>
+        </div>
+
+        <!-- Frontend Post Mockup -->
+        <div class="mockup-wrap" style="margin-top:28px;">
+          <div class="mockup-label">How the Published Post Looks on the Frontend</div>
+          <div class="browser-frame">
+            <div class="browser-bar">
+              <div class="browser-dots"><span></span><span></span><span></span></div>
+              <div class="browser-url">sweetpalm.local/5-secrets-sweet-potato-rolls/</div>
+            </div>
+            <div class="post-mockup">
+              <div class="post-mockup-nav">
+                <div class="post-mockup-logo">🌴 Sweet Palm Bakery</div>
+                <div class="post-mockup-nav-links">
+                  <span>Home</span><span>About</span><span>Menu</span><span>Blog</span><span>Contact</span>
+                </div>
+              </div>
+              <div class="post-hero-img">Featured Image — sweet-potato-rolls.jpg</div>
+              <div class="post-cat-tag">BAKING TIPS</div>
+              <h2>5 Secrets to Our Famous Sweet Potato Rolls</h2>
+              <div class="post-byline">By Maria Kollie · January 15, 2025 · 5 min read</div>
+              <p class="post-body-text">Every Saturday morning, a line forms outside our door before we even flip the "Open" sign. The reason? Our legendary sweet potato rolls — pillowy, golden, and brushed with honey butter...</p>
+            </div>
+          </div>
+        </div>
+      </section>
+
+
+      <!-- ========================================================
+           SECTION 8 — ADDITIONAL POSTS
+      ========================================================= -->
+      <section class="section" id="section-8">
+        <div class="section-header">
+          <div class="section-num">08</div>
+          <h1 class="section-title">Creating Additional Blog Posts</h1>
+        </div>
+
+        <p>Create these two additional posts to populate the blog. Follow the same workflow from Section 7.</p>
+
+        <h2>Post 2 — Holiday Pastry Box Guide</h2>
+        <div class="content-sample">
+          <div class="content-sample-header">📄 Post 2 — Full Sample Content</div>
+          <h3>The Ultimate Guide to Our Christmas Pastry Gift Boxes</h3>
+          <p><strong>Category:</strong> Seasonal Specials &nbsp;|&nbsp; <strong>Tags:</strong> Christmas, gift box, holiday pastries, custom orders<br/>
+          <strong>Featured Image:</strong> holiday-pastries.jpg</p>
+          <hr style="border:none;border-top:1px solid #e5d9c8;margin:12px 0;"/>
+          <p>The holiday season at Sweet Palm means one thing above all else: gift boxes. Each December, we handcraft hundreds of custom pastry gift boxes, and every year we sell out faster than the year before. Here's everything you need to know about ordering yours this season.</p>
+
+          <p><strong>What's Inside Our Signature Holiday Box</strong><br/>
+          Our holiday boxes come in three sizes, each filled with a rotating selection of seasonal treats. Every item is baked to order and packed in our signature kraft paper box tied with a green and gold ribbon — the colors of the Liberian flag, our small way of celebrating where we come from.</p>
+
+          <p><em>The Sampler Box (12 pieces) — L$2,500:</em> Perfect for a personal gift or small gathering. Choose three pastry varieties, four pieces each.</p>
+
+          <p><em>The Celebration Box (24 pieces) — L$4,800:</em> Our most popular size. Great for office gifts, teacher appreciation, or holiday parties. Choose up to five varieties.</p>
+
+          <p><em>The Grand Holiday Box (48 pieces) — L$8,500:</em> For the pastry lover who never wants the celebration to end. Up to eight varieties, beautifully arranged with tissue paper and a personalized gift card.</p>
+
+          <p><strong>This Season's Pastry Menu</strong><br/>
+          Classic Chin-Chin with coconut sugar glaze · Liberian Ginger Snaps · Palm Butter Shortbread Cookies · Sweet Potato Rolls (half-dozen) · Coconut Tarts · Cassava Puff Pastry with pepper filling · Vegan Plantain Cake (GF) · Fried Doughnuts with cinnamon sugar</p>
+
+          <p><strong>Order Deadlines:</strong><br/>
+          Christmas Week Delivery: Order by December 15 · New Year's Eve: Order by December 27</p>
+
+          <p>Contact us: +231 777 123 456 or orders@sweetpalmbakery.com 🎄</p>
+        </div>
+
+        <h2>Post 3 — Cassava Bread Guide</h2>
+        <div class="content-sample">
+          <div class="content-sample-header">📄 Post 3 — Full Sample Content</div>
+          <h3>Everything You Never Knew About Liberian Cassava Bread</h3>
+          <p><strong>Category:</strong> Baking Tips &nbsp;|&nbsp; <strong>Tags:</strong> cassava, traditional baking, Liberian food, gluten-free<br/>
+          <strong>Featured Image:</strong> cassava-bread.jpg</p>
+          <hr style="border:none;border-top:1px solid #e5d9c8;margin:12px 0;"/>
+          <p>Cassava bread is one of West Africa's oldest baked goods — and it may be the most underappreciated. Made from fermented cassava flour, it's naturally gluten-free, dense, and slightly sour in a way that pairs beautifully with palm butter soup or a cup of strong Liberian coffee.</p>
+
+          <p><strong>What Is Cassava Bread?</strong><br/>
+          Traditional cassava bread is made from bitter cassava that has been peeled, grated, pressed dry to remove toxic cyanide compounds, and then fermented. The result is a flour (called "gari" in many regional recipes) that is packed and baked over low heat into a flat, slightly chewy loaf.</p>
+
+          <p><strong>Our Modern Take</strong><br/>
+          At Sweet Palm, we honor the traditional method but add a few refinements: a longer fermentation (72 hours instead of 24), a blend of cassava flour and sorghum for structural support, and a natural honey glaze before the final bake. The result is a loaf that bridges the traditional and the contemporary without losing either.</p>
+
+          <p><strong>Health Benefits</strong><br/>
+          Cassava bread is 100% gluten-free · High in resistant starch (feeds healthy gut bacteria) · Low glycemic index compared to wheat bread · Rich in potassium and folate · Suitable for most allergy diets</p>
+
+          <p><strong>Available at Sweet Palm</strong><br/>
+          We bake cassava loaves every Tuesday and Thursday. Available while supplies last. Full loaf: L$650. Half loaf: L$350. Pre-orders accepted by Monday for Tuesday bake. Call +231 777 123 456 or visit us at 14 Tubman Boulevard, Sinkor. 🍞</p>
+        </div>
+      </section>
+
+
+      <!-- ========================================================
+           SECTION 9 — CATEGORIES & TAGS
+      ========================================================= -->
+      <section class="section" id="section-9">
+        <div class="section-header">
+          <div class="section-num">09</div>
+          <h1 class="section-title">Categories &amp; Tags</h1>
+        </div>
+
+        <h2>Create Post Categories</h2>
+        <p>Go to <strong>Posts → Categories</strong> and create:</p>
+
+        <div class="table-wrap">
+          <table>
+            <thead><tr><th>Category Name</th><th>Slug</th><th>Description</th></tr></thead>
+            <tbody>
+              <tr><td>Baking Tips</td><td><code>baking-tips</code></td><td>Techniques, tutorials, and how-to guides</td></tr>
+              <tr><td>Seasonal Specials</td><td><code>seasonal-specials</code></td><td>Limited-time offerings and holiday features</td></tr>
+              <tr><td>Bakery News</td><td><code>bakery-news</code></td><td>Announcements, events, and updates</td></tr>
+              <tr><td>Behind the Scenes</td><td><code>behind-the-scenes</code></td><td>Stories about the team, kitchen, and process</td></tr>
+              <tr><td>Local Ingredients</td><td><code>local-ingredients</code></td><td>Spotlights on Liberian ingredients &amp; suppliers</td></tr>
+            </tbody>
+          </table>
+        </div>
+
+        <div class="note-box">
+          <div class="note-icon">💡</div>
+          <div class="note-content">
+            <div class="note-label">Note</div>
+            <p>Think of categories as the <em>chapters</em> of a book and tags as the <em>index entries</em>. A post should belong to 1–2 categories maximum but can have many tags. Examples of tags: <code>cassava</code>, <code>sweet potato</code>, <code>palm oil</code>, <code>gluten-free</code>, <code>holiday</code>, <code>Monrovia</code>, <code>custom orders</code>, <code>Liberian recipes</code>.</p>
+          </div>
+        </div>
+      </section>
+
+
+      <!-- ========================================================
+           SECTION 10 — PAGES
+      ========================================================= -->
+      <section class="section" id="section-10">
+        <div class="section-header">
+          <div class="section-num">10</div>
+          <h1 class="section-title">Creating Pages</h1>
+        </div>
+
+        <p>Pages differ from Posts — they are for static, evergreen content that doesn't change frequently. Go to <strong>Pages → Add New</strong> for each of the following.</p>
+
+        <h2>Page 1 — Home (Placeholder)</h2>
+        <p>Create a page titled <strong>Home</strong> with placeholder text. It will be fully rebuilt with Elementor in Section 11.</p>
+
+        <h2>Page 2 — About Us</h2>
+        <div class="content-sample">
+          <div class="content-sample-header">📄 About Page — Full Sample Content</div>
+          <h3>About Sweet Palm Bakery — Monrovia's Artisan Bakery</h3>
+          <p><em>We Bake with Heart — And a Whole Lot of Palm Butter</em></p>
+          <p>Sweet Palm Bakery was born in 2017 in a small kitchen in Sinkor, Monrovia. What started as a weekend market stall selling ginger cookies has grown into one of Monrovia's most beloved neighborhood bakeries.</p>
+
+          <p><strong>Our Story</strong><br/>
+          Our founder, Maria Kollie, learned to bake alongside her grandmother in Nimba County, Liberia, where making bread was a daily ritual of love and community. Maria moved to Monrovia in 2012 to study business management at the University of Liberia. But the pull of the kitchen was always stronger than the lecture hall.<br/><br/>
+          In 2017, she invested her savings in a second-hand commercial oven and a Monrovia waterside market stall permit. Within six months, she had a waitlist for custom cake orders. In 2019, she opened her first brick-and-mortar bakery on Tubman Boulevard. Today, Sweet Palm employs 11 full-time staff, serves over 300 customers daily, and still makes everything from scratch, every single day.</p>
+
+          <p><strong>Our Philosophy</strong><br/>
+          <em>Real Ingredients Only.</em> We use unbleached flour, local palm oil, Liberian forest honey, and whole milk from farms in Margibi County. No artificial flavors, no preservatives.<br/><br/>
+          <em>Local First.</em> Our eggs come from small farms in Margibi County. Our seasonal fruits come from Lofa County farmers. We believe buying local makes our food taste better and strengthens our community.<br/><br/>
+          <em>Zero Waste Kitchen.</em> Day-old bread becomes croutons. Overripe plantains become plantain cake. Nothing leaves this kitchen without being turned into something beautiful.</p>
+
+          <p><strong>Meet the Team</strong><br/>
+          <em>Maria Kollie — Founder &amp; Head Baker:</em> Still arrives at the bakery at 4:30 a.m. every day and personally oversees all recipe development.<br/><br/>
+          <em>James Sumo — Operations Manager:</em> Handles staffing, supplier relationships, and day-to-day operations. Also makes an exceptional chin-chin.<br/><br/>
+          <em>Fatu Kamara — Pastry Chef:</em> Trained in Accra, Ghana. Responsible for all custom cakes, celebration pastries, and the seasonal specialty menu.</p>
+
+          <p><strong>Visit Us</strong><br/>
+          14 Tubman Boulevard, Sinkor, Monrovia, Liberia<br/>
+          Monday – Friday: 7:00 a.m. – 5:00 p.m.<br/>
+          Saturday – Sunday: 7:00 a.m. – 1:00 p.m.<br/>
+          Phone: +231 777 123 456 &nbsp;|&nbsp; Email: hello@sweetpalmbakery.com</p>
+        </div>
+
+        <h2>Page 3 — Our Menu</h2>
+        <div class="content-sample">
+          <div class="content-sample-header">📄 Menu Page — Full Sample Content</div>
+          <h3>Our Menu — Baked Fresh Daily</h3>
+          <p>Everything at Sweet Palm is made from scratch every morning. We don't freeze our pastries and we don't hold items over. This means our selection varies based on what came out of the oven — and when something is gone, it's gone. Arrive before 9:00 a.m. on weekends for the best selection.</p>
+
+          <p><strong>🥐 Pastries &amp; Morning Bakes</strong><br/>
+          Classic Butter Roll — L$150 | Coconut Tart — L$200 | Sweet Potato Roll — L$180 | Palm Butter Puff Pastry — L$220 | Chin-Chin (100g bag) — L$300 | Liberian Ginger Snap (each) — L$80</p>
+
+          <p><strong>🎂 Cakes &amp; Celebration</strong><br/>
+          Classic Birthday Cake (6-inch, serves 8-10) — from L$8,500 (72hr advance order required)<br/>
+          Whole Layer Cakes — from L$9,000 (Coconut Cream, Palm Butter Chocolate, Carrot with Ginger Cream Cheese, Vanilla Bean)<br/>
+          Celebration Cupcakes (dozen) — L$4,200 | Slice of the Day — L$800–L$1,200</p>
+
+          <p><strong>🍞 Artisan Breads</strong><br/>
+          Cassava Loaf (900g) — L$650 | Whole Wheat with Sesame (800g) — L$700 | Sourdough Country White (850g) — L$750 | Plantain &amp; Cinnamon Loaf (seasonal) — L$800</p>
+
+          <p><strong>☕ Drinks</strong><br/>
+          Brewed Liberian Coffee (12 oz) — L$400 | Cold Brew (16 oz) — L$600 | Ginger Zobo Juice — L$350 | Fresh Coconut Water — L$300 | Hibiscus Lemonade — L$400</p>
+
+          <p><em>Items labeled GF are gluten-free · V are vegan · NF are nut-free. A full allergen guide is available at the counter or by emailing hello@sweetpalmbakery.com.</em></p>
+        </div>
+
+        <h2>Page 4 — Contact</h2>
+        <div class="content-sample">
+          <div class="content-sample-header">📄 Contact Page — Full Sample Content</div>
+          <h3>Contact Sweet Palm Bakery</h3>
+          <p><strong>Sweet Palm Bakery</strong><br/>
+          14 Tubman Boulevard, Sinkor, Monrovia, Liberia<br/>
+          (Near the Sinkor Junction, opposite First Bank)</p>
+
+          <p><strong>Hours:</strong><br/>
+          Monday – Friday: 7:00 a.m. – 5:00 p.m.<br/>
+          Saturday – Sunday: 7:00 a.m. – 1:00 p.m.</p>
+
+          <p><strong>Phone:</strong> +231 777 123 456<br/>
+          <strong>WhatsApp:</strong> +231 777 123 456 (orders &amp; enquiries)<br/>
+          <strong>General:</strong> hello@sweetpalmbakery.com<br/>
+          <strong>Custom Orders:</strong> orders@sweetpalmbakery.com</p>
+
+          <p><em>[Contact form added via WPForms plugin — see Section 12]</em></p>
+          <p>For custom cakes and large orders, please include: your name &amp; phone number, event date, number of guests, inspiration photos, and budget range. We typically respond within 1 business day.</p>
+        </div>
+
+        <h2>Page 5 — Blog Landing Page</h2>
+        <p>Create a page titled <strong>"Fresh From the Oven — Our Blog"</strong> with a brief tagline: <em>"Stories, recipes, tips, and all things baked. Pull up a chair and stay a while."</em></p>
+        <p>Assign this page as the <strong>Posts page</strong> in <strong>Settings → Reading</strong>. WordPress will automatically populate it with all published blog posts.</p>
+
+        <div class="note-box info">
+          <div class="note-icon">ℹ️</div>
+          <div class="note-content">
+            <div class="note-label">Note</div>
+            <p>Always create a <strong>Privacy Policy</strong> page. Go to <strong>Settings → Privacy → Generate a default privacy policy</strong>. WordPress provides a template — customize it with the bakery name, address (14 Tubman Blvd, Sinkor, Monrovia), and email (hello@sweetpalmbakery.com). A privacy policy is legally required in most jurisdictions if you collect any user data through forms or cookies.</p>
+          </div>
+        </div>
+      </section>
+
+
+      <!-- ========================================================
+           SECTION 11 — ELEMENTOR
+      ========================================================= -->
+      <section class="section" id="section-11">
+        <div class="section-header">
+          <div class="section-num">11</div>
+          <h1 class="section-title">Building with Elementor Page Builder</h1>
+        </div>
+
+        <div class="step-card">
+          <div class="step-card-header">
+            <div class="step-badge">Step 11.1</div>
+            <div class="step-card-title">Install Elementor</div>
+          </div>
+          <ol>
+            <li>Go to <strong>Plugins → Add New</strong></li>
+            <li>Search: <code>Elementor</code></li>
+            <li>Install and activate <strong>"Elementor Website Builder"</strong> by Elementor.com</li>
+            <li>Also install <strong>"Essential Addons for Elementor"</strong> by WPDeveloper (adds 80+ extra widgets)</li>
+          </ol>
+        </div>
+
+        <!-- Elementor Mockup -->
+        <div class="mockup-wrap">
+          <div class="mockup-label">Elementor Page Builder Interface</div>
+          <div class="browser-frame">
+            <div class="browser-bar">
+              <div class="browser-dots"><span></span><span></span><span></span></div>
+              <div class="browser-url">sweetpalm.local/?elementor</div>
+            </div>
+            <div class="elementor-mockup">
+              <div class="el-left-panel">
+                <div class="el-panel-header">Elements</div>
+                <div class="el-widget-item"><span class="wi">⬜</span> Section</div>
+                <div class="el-widget-item"><span class="wi">T</span> Heading</div>
+                <div class="el-widget-item"><span class="wi">¶</span> Text Editor</div>
+                <div class="el-widget-item"><span class="wi">🖼</span> Image</div>
+                <div class="el-widget-item"><span class="wi">⬛</span> Button</div>
+                <div class="el-widget-item"><span class="wi">⭐</span> Icon Box</div>
+                <div class="el-widget-item"><span class="wi">📍</span> Google Maps</div>
+                <div class="el-widget-item"><span class="wi">📋</span> Form</div>
+                <div class="el-widget-item"><span class="wi">📰</span> Post Grid</div>
+              </div>
+              <div class="el-canvas">
+                <div class="el-section">
+                  <div class="el-section-label">Section · Hero</div>
+                  <div class="el-widget-block hero-block">
+                    <h3>Baked with Heart, Served Fresh Daily</h3>
+                    <p>14 Tubman Blvd, Sinkor, Monrovia · Tue–Sun from 7am</p>
+                  </div>
+                </div>
+                <div class="el-section">
+                  <div class="el-section-label">Section · Features</div>
+                  <div class="el-row">
+                    <div class="el-col">
+                      <div class="el-widget-block">⭐ Icon Box<br/>Real Ingredients</div>
+                    </div>
+                    <div class="el-col">
+                      <div class="el-widget-block">⭐ Icon Box<br/>Fresh Every Day</div>
+                    </div>
+                    <div class="el-col">
+                      <div class="el-widget-block">⭐ Icon Box<br/>Liberia Local</div>
+                    </div>
+                  </div>
+                </div>
+                <div class="el-section">
+                  <div class="el-section-label">Section · Blog Posts</div>
+                  <div class="el-widget-block">📰 Post Grid — Latest 3 Posts</div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <h2>Homepage Section Plan</h2>
+        <p>Build these 7 sections from top to bottom on the Home page (<strong>Pages → Home → Edit with Elementor</strong>):</p>
+
+        <div class="table-wrap">
+          <table>
+            <thead><tr><th>#</th><th>Section Name</th><th>Widgets Used</th><th>Background</th></tr></thead>
+            <tbody>
+              <tr><td>1</td><td>Hero / Above the Fold</td><td>Inner Section, Heading (×2), Text, Button (×2)</td><td>Full-width image + dark overlay 40%</td></tr>
+              <tr><td>2</td><td>"Why Sweet Palm?" Features</td><td>3 × Icon Box</td><td>Cream <code>#F5EFE6</code></td></tr>
+              <tr><td>3</td><td>Signature Items Showcase</td><td>Image Gallery (4 images)</td><td>Dark <code>#2C1F14</code></td></tr>
+              <tr><td>4</td><td>About Teaser</td><td>Image + Heading + Text + Button</td><td>White, 2-column 50/50</td></tr>
+              <tr><td>5</td><td>Latest Blog Posts</td><td>Post Grid (Essential Addons)</td><td>Parchment <code>#F0E8DC</code></td></tr>
+              <tr><td>6</td><td>Newsletter Signup</td><td>Heading + Shortcode (MailPoet)</td><td>Brand Brown <code>#8B5E3C</code></td></tr>
+              <tr><td>7</td><td>Map &amp; Location</td><td>Google Maps widget</td><td>White</td></tr>
+            </tbody>
+          </table>
+        </div>
+
+        <div class="note-box">
+          <div class="note-icon">💡</div>
+          <div class="note-content">
+            <div class="note-label">Note</div>
+            <p>When setting the <strong>Hero section Google Maps coordinates</strong>, use: <code>6.3004° N, 10.7969° W</code> for Tubman Boulevard, Sinkor, Monrovia. Set zoom level to 15 and height to 400px.</p>
+          </div>
+        </div>
+      </section>
+
+
+      <!-- ========================================================
+           SECTION 12 — PLUGINS
+      ========================================================= -->
+      <section class="section" id="section-12">
+        <div class="section-header">
+          <div class="section-num">12</div>
+          <h1 class="section-title">Essential Plugins</h1>
+        </div>
+
+        <p>Install all of the following. Each serves a specific real-world purpose that students will encounter on every professional WordPress project.</p>
+
+        <div class="plugin-grid">
+          <div class="plugin-card">
+            <div class="plugin-icon" style="background:#E8F5E9;">🔍</div>
+            <div class="plugin-name">Yoast SEO</div>
+            <div class="plugin-purpose">On-page SEO, XML sitemaps, meta tags, content analysis</div>
+            <span class="plugin-tag">SEO</span>
+          </div>
+          <div class="plugin-card">
+            <div class="plugin-icon" style="background:#E3F2FD;">📋</div>
+            <div class="plugin-name">WPForms Lite</div>
+            <div class="plugin-purpose">Drag-and-drop form builder for contact, order, and enquiry forms</div>
+            <span class="plugin-tag">Forms</span>
+          </div>
+          <div class="plugin-card">
+            <div class="plugin-icon" style="background:#F3E5F5;">🛒</div>
+            <div class="plugin-name">WooCommerce</div>
+            <div class="plugin-purpose">Full e-commerce — online ordering, product catalog, checkout</div>
+            <span class="plugin-tag">E-commerce</span>
+          </div>
+          <div class="plugin-card">
+            <div class="plugin-icon" style="background:#FFF8E1;">🖼️</div>
+            <div class="plugin-name">Smush</div>
+            <div class="plugin-purpose">Automatic image compression, lazy loading, WebP conversion</div>
+            <span class="plugin-tag">Performance</span>
+          </div>
+          <div class="plugin-card">
+            <div class="plugin-icon" style="background:#E8F5E9;">💾</div>
+            <div class="plugin-name">UpdraftPlus</div>
+            <div class="plugin-purpose">Automated backups to Google Drive, Dropbox, or email</div>
+            <span class="plugin-tag">Backup</span>
+          </div>
+          <div class="plugin-card">
+            <div class="plugin-icon" style="background:#FFEBEE;">🛡️</div>
+            <div class="plugin-name">Wordfence Security</div>
+            <div class="plugin-purpose">Firewall, malware scanning, brute-force login protection, 2FA</div>
+            <span class="plugin-tag">Security</span>
+          </div>
+          <div class="plugin-card">
+            <div class="plugin-icon" style="background:#E0F7FA;">⚡</div>
+            <div class="plugin-name">WP Super Cache</div>
+            <div class="plugin-purpose">Static page caching for dramatically faster page loads</div>
+            <span class="plugin-tag">Performance</span>
+          </div>
+          <div class="plugin-card">
+            <div class="plugin-icon" style="background:#FFF3E0;">📧</div>
+            <div class="plugin-name">MailPoet</div>
+            <div class="plugin-purpose">Email newsletter list, automation, subscriber management</div>
+            <span class="plugin-tag">Email</span>
+          </div>
+          <div class="plugin-card">
+            <div class="plugin-icon" style="background:#E8F5E9;">📊</div>
+            <div class="plugin-name">Site Kit by Google</div>
+            <div class="plugin-purpose">Google Analytics 4 integration directly in the WP dashboard</div>
+            <span class="plugin-tag">Analytics</span>
+          </div>
+        </div>
+
+        <h2>Plugin 1 — Yoast SEO Configuration</h2>
+        <div class="step-card">
+          <div class="step-card-header">
+            <div class="step-badge">Step 12.1</div>
+            <div class="step-card-title">Set Up Yoast SEO for Sweet Palm Bakery</div>
+          </div>
+          <ol>
+            <li>Run the <strong>Setup Wizard</strong> after activation</li>
+            <li>SEO → Search Appearance → General: Site Name = <code>Sweet Palm Bakery</code>, Separator = <code>|</code></li>
+            <li>SEO → Sitemaps → Enable XML Sitemaps: ✅</li>
+            <li>Submit sitemap to Google Search Console: <code>sweetpalmbakery.com/sitemap_index.xml</code></li>
+            <li>For each post/page, fill in the Yoast metabox below the editor (see Section 17)</li>
+          </ol>
+        </div>
+
+        <h2>Plugin 2 — WPForms Contact Form</h2>
+        <p>Create a contact form and paste its shortcode into the Contact page:</p>
+
+        <div class="table-wrap">
+          <table>
+            <thead><tr><th>Field</th><th>Type</th><th>Required?</th></tr></thead>
+            <tbody>
+              <tr><td>Full Name</td><td>Single Line Text</td><td>Yes</td></tr>
+              <tr><td>Email Address</td><td>Email</td><td>Yes</td></tr>
+              <tr><td>Phone / WhatsApp</td><td>Phone</td><td>No</td></tr>
+              <tr><td>Subject</td><td>Dropdown: General Inquiry / Custom Cake Order / Wholesale / Other</td><td>Yes</td></tr>
+              <tr><td>Message</td><td>Paragraph Text</td><td>Yes</td></tr>
+            </tbody>
+          </table>
+        </div>
+
+        <p><strong>Notification email:</strong> <code>hello@sweetpalmbakery.com</code><br/>
+        <strong>Confirmation message:</strong> <em>"Thank you for contacting Sweet Palm Bakery! We'll get back to you within 1 business day. You can also reach us via WhatsApp at +231 777 123 456."</em></p>
+
+        <h2>Plugin 3 — UpdraftPlus Backup Configuration</h2>
+        <div class="note-box warning">
+          <div class="note-icon">⚠️</div>
+          <div class="note-content">
+            <div class="note-label">Important</div>
+            <p>Setting up backups is the most important thing you can do for any WordPress site. Do it <em>before</em> anything goes wrong. Many beginners learn this lesson the hard way after losing weeks of work to a server failure or hack.</p>
+          </div>
+        </div>
+        <div class="step-card">
+          <div class="step-card-header">
+            <div class="step-badge">Step 12.3</div>
+            <div class="step-card-title">Configure Automated Backups</div>
+          </div>
+          <ol>
+            <li>Go to <strong>Settings → UpdraftPlus Backups → Settings</strong></li>
+            <li>Files backup schedule: <strong>Weekly</strong></li>
+            <li>Database backup schedule: <strong>Daily</strong></li>
+            <li>Remote Storage: Select <strong>Google Drive</strong> → Authenticate with Google account</li>
+            <li>Enter admin email for backup notifications</li>
+            <li>Click <strong>"Save Changes"</strong></li>
+            <li>Click <strong>"Backup Now"</strong> to create the first manual backup</li>
+          </ol>
+        </div>
+
+        <h2>Plugin 4 — MailPoet Welcome Email</h2>
+        <div class="content-sample">
+          <div class="content-sample-header">📧 Welcome Email — Full Sample Content</div>
+          <h3>Subject: Welcome to the Sweet Palm Insiders List! 🌴</h3>
+          <p>Hi [subscriber:firstname | default:there],</p>
+          <p>Welcome to the Sweet Palm Insiders list! We're so glad you're here.</p>
+          <p>As an Insiders member, you'll be the first to know about: new seasonal menu launches · exclusive pre-order windows for holiday specials · behind-the-scenes stories from our kitchen · Liberian baking recipes we're finally willing to share.</p>
+          <p>Our next newsletter goes out on the first Friday of the month. Until then, come visit us at 14 Tubman Blvd, Sinkor — tell us you just subscribed and we'll give you 10% off your first order.</p>
+          <p>With warmth and fresh bread,<br/>Maria &amp; the Sweet Palm Team<br/>+231 777 123 456</p>
+        </div>
+      </section>
+
+
+      <!-- ========================================================
+           SECTION 13 — MENUS
+      ========================================================= -->
+      <section class="section" id="section-13">
+        <div class="section-header">
+          <div class="section-num">13</div>
+          <h1 class="section-title">Navigation Menus</h1>
+        </div>
+
+        <h2>Create the Primary Navigation Menu</h2>
+        <p>Go to <strong>Appearance → Menus → Create a new menu</strong> named <strong>Primary Navigation</strong>.</p>
+
+        <div class="table-wrap">
+          <table>
+            <thead><tr><th>Label</th><th>Links To</th><th>Dropdown Items</th></tr></thead>
+            <tbody>
+              <tr><td>Home</td><td>Pages → Home</td><td>—</td></tr>
+              <tr><td>About</td><td>Pages → About Sweet Palm Bakery</td><td>—</td></tr>
+              <tr><td>Our Menu</td><td>Pages → Our Menu</td><td>Pastries &amp; Bakes · Cakes · Artisan Breads · Drinks</td></tr>
+              <tr><td>Order Online</td><td>WooCommerce Shop page</td><td>—</td></tr>
+              <tr><td>Blog</td><td>Pages → Blog</td><td>—</td></tr>
+              <tr><td>Contact</td><td>Pages → Contact Us</td><td>—</td></tr>
+            </tbody>
+          </table>
+        </div>
+
+        <div class="step-card">
+          <div class="step-card-header">
+            <div class="step-badge">Step 13.3</div>
+            <div class="step-card-title">Add Dropdown Items Under "Our Menu"</div>
+          </div>
+          <ol>
+            <li>Add a new Custom Link: Label = <code>Pastries &amp; Bakes</code>, URL = <code>/our-menu/#pastries</code></li>
+            <li>Drag it under "Our Menu" in the menu editor and <strong>indent it one level right</strong> — this creates a dropdown</li>
+            <li>Repeat for: <code>Cakes &amp; Celebration</code>, <code>Artisan Breads</code>, <code>Drinks</code></li>
+            <li>Under <strong>Menu Settings</strong>, check <strong>"Primary Menu"</strong> for Theme Location</li>
+            <li>Click <strong>"Save Menu"</strong></li>
+          </ol>
+        </div>
+
+        <h2>Footer Menu</h2>
+        <p>Create a second menu named <strong>Footer Links</strong> and assign it to the "Footer Menu" location:</p>
+        <ul>
+          <li>Privacy Policy → Pages → Privacy Policy</li>
+          <li>Wholesale Enquiries → Custom Link → <code>mailto:wholesale@sweetpalmbakery.com</code></li>
+          <li>Press &amp; Media → Custom Link → <code>mailto:press@sweetpalmbakery.com</code></li>
+          <li>Sitemap → Custom Link → <code>/sitemap_index.xml</code></li>
+        </ul>
+      </section>
+
+
+      <!-- ========================================================
+           SECTION 14 — WIDGETS
+      ========================================================= -->
+      <section class="section" id="section-14">
+        <div class="section-header">
+          <div class="section-num">14</div>
+          <h1 class="section-title">Widgets &amp; Sidebars</h1>
+        </div>
+
+        <p>Go to <strong>Appearance → Widgets</strong> and populate the Blog Sidebar with these widgets in order:</p>
+
+        <div class="table-wrap">
+          <table>
+            <thead><tr><th>Widget</th><th>Title</th><th>Settings</th></tr></thead>
+            <tbody>
+              <tr><td>Search</td><td>Search the Blog</td><td>Default settings</td></tr>
+              <tr><td>Custom HTML</td><td>About Sweet Palm</td><td>Short bio text + link to About page (see below)</td></tr>
+              <tr><td>Categories</td><td>Browse by Category</td><td>Show hierarchy ✅ · Show post counts ✅</td></tr>
+              <tr><td>Recent Posts</td><td>Fresh From the Blog</td><td>Show 5 posts · Show post date ✅</td></tr>
+              <tr><td>Tag Cloud</td><td>Popular Topics</td><td>Taxonomy: Tags</td></tr>
+              <tr><td>MailPoet Subscription</td><td>Never Miss a New Post</td><td>Select Welcome newsletter form</td></tr>
+            </tbody>
+          </table>
+        </div>
+
+        <div class="code-block">
+          <div class="code-header">
+            <div class="code-lang">HTML — About Widget Code</div>
+            <div class="code-dots"><span></span><span></span><span></span></div>
+          </div>
+          <div class="code-body">
+<pre><span class="c">&lt;!-- Custom HTML Widget — About Blurb --&gt;</span>
+<span class="k">&lt;div</span> class=<span class="s">"sidebar-about"</span><span class="k">&gt;</span>
+  <span class="k">&lt;img</span> src=<span class="s">"/wp-content/uploads/baker-kneading.jpg"</span>
+       alt=<span class="s">"Baker at Sweet Palm Bakery Monrovia"</span>
+       style=<span class="s">"width:100%;border-radius:8px;margin-bottom:12px;"</span><span class="k">/&gt;</span>
+  <span class="k">&lt;h3&gt;</span>Hi, We're Sweet Palm<span class="k">&lt;/h3&gt;</span>
+  <span class="k">&lt;p&gt;</span>Monrovia's favourite neighbourhood bakery,
+     making everything from scratch since 2017.<span class="k">&lt;/p&gt;</span>
+  <span class="k">&lt;a</span> href=<span class="s">"/about-sweet-palm-bakery/"</span><span class="k">&gt;</span>
+    Learn Our Story →
+  <span class="k">&lt;/a&gt;</span>
+<span class="k">&lt;/div&gt;</span></pre>
+          </div>
+        </div>
+      </section>
+
+
+      <!-- ========================================================
+           SECTION 15 — USERS
+      ========================================================= -->
+      <section class="section" id="section-15">
+        <div class="section-header">
+          <div class="section-num">15</div>
+          <h1 class="section-title">User Management</h1>
+        </div>
+
+        <h2>WordPress User Roles Explained</h2>
+        <div class="table-wrap">
+          <table>
+            <thead><tr><th>Role</th><th>What They Can Do</th></tr></thead>
+            <tbody>
+              <tr><td><strong>Administrator</strong></td><td>Full access — manages everything including themes, plugins, and users</td></tr>
+              <tr><td><strong>Editor</strong></td><td>Can publish and manage <em>all</em> posts and pages (including others')</td></tr>
+              <tr><td><strong>Author</strong></td><td>Can publish and manage only <em>their own</em> posts</td></tr>
+              <tr><td><strong>Contributor</strong></td><td>Can write posts but <em>cannot publish</em> — must be approved by an Editor</td></tr>
+              <tr><td><strong>Subscriber</strong></td><td>Can only manage their own profile; read-only on private content</td></tr>
+            </tbody>
+          </table>
+        </div>
+
+        <h2>Create New Users</h2>
+        <p>Go to <strong>Users → Add New</strong> and create the following team accounts:</p>
+
+        <div class="table-wrap">
+          <table>
+            <thead><tr><th>Username</th><th>Full Name</th><th>Email</th><th>Role</th></tr></thead>
+            <tbody>
+              <tr><td><code>jamessumo</code></td><td>James Sumo</td><td>james@sweetpalmbakery.com</td><td>Editor</td></tr>
+              <tr><td><code>fatu_content</code></td><td>Fatu Kamara</td><td>fatu@sweetpalmbakery.com</td><td>Author</td></tr>
+              <tr><td><code>guest_writer</code></td><td>Alex Mensah</td><td>alex.writer@gmail.com</td><td>Contributor</td></tr>
+            </tbody>
+          </table>
+        </div>
+
+        <h2>Update Your Admin Profile</h2>
+        <p>Go to <strong>Users → Your Profile</strong> and set:</p>
+        <ul>
+          <li>First Name: <strong>Maria</strong> &nbsp; Last Name: <strong>Kollie</strong></li>
+          <li>Display name publicly as: <strong>Maria Kollie</strong></li>
+          <li>Email: <code>maria@sweetpalmbakery.com</code></li>
+          <li>Biographical Info: <em>Founder of Sweet Palm Bakery and lifelong baker. Born in Nimba County, trained in her grandmother's kitchen, and still arrives at the bakery at 4:30 a.m. every morning.</em></li>
+        </ul>
+
+        <div class="note-box">
+          <div class="note-icon">💡</div>
+          <div class="note-content">
+            <div class="note-label">Note</div>
+            <p>The biographical info shows up as the "author bio" at the bottom of blog posts. It builds reader trust and improves SEO. Always fill it in for any user who publishes public content.</p>
+          </div>
+        </div>
+      </section>
+
+
+      <!-- ========================================================
+           SECTION 16 — TOOLS
+      ========================================================= -->
+      <section class="section" id="section-16">
+        <div class="section-header">
+          <div class="section-num">16</div>
+          <h1 class="section-title">WordPress Tools</h1>
+        </div>
+
+        <h2>Tools → Site Health</h2>
+        <p>Go to <strong>Tools → Site Health</strong>. WordPress analyses your installation and reports issues in two tabs:</p>
+        <ul>
+          <li><strong>Status tab:</strong> Flags issues like outdated PHP versions, missing SSL, debug mode being ON, or failing scheduled events. Address all "Critical Issues" and as many "Recommendations" as possible.</li>
+          <li><strong>Info tab:</strong> Detailed technical data — useful when contacting hosting support or troubleshooting plugin conflicts.</li>
+        </ul>
+
+        <div class="table-wrap">
+          <table>
+            <thead><tr><th>Common Site Health Check</th><th>Desired State</th></tr></thead>
+            <tbody>
+              <tr><td>PHP Version</td><td>8.1 or higher</td></tr>
+              <tr><td>HTTPS / SSL Certificate</td><td>Active (green padlock)</td></tr>
+              <tr><td>WordPress Version</td><td>Latest stable release</td></tr>
+              <tr><td>Debug Mode</td><td>OFF on live sites</td></tr>
+              <tr><td>Scheduled Events (WP Cron)</td><td>Running properly</td></tr>
+            </tbody>
+          </table>
+        </div>
+
+        <h2>Tools → Export Content</h2>
+        <div class="step-card">
+          <div class="step-card-header">
+            <div class="step-badge">Step 16.2</div>
+            <div class="step-card-title">Export Your Content as an XML File</div>
+          </div>
+          <ol>
+            <li>Go to <strong>Tools → Export</strong></li>
+            <li>Select <strong>"All content"</strong></li>
+            <li>Click <strong>"Download Export File"</strong></li>
+            <li>Save the <code>.xml</code> file — this is a portable backup of all posts, pages, comments, and settings</li>
+            <li>This file can be imported into any other WordPress installation</li>
+          </ol>
+        </div>
+
+        <div class="note-box">
+          <div class="note-icon">💡</div>
+          <div class="note-content">
+            <div class="note-label">Note</div>
+            <p>The WordPress export/import tool is how you migrate content between hosts (e.g., from LocalWP to a live server). It exports text content, not media files — images must be migrated separately or re-downloaded by WordPress using the "Download and import file attachments" option during import.</p>
+          </div>
+        </div>
+      </section>
+
+
+      <!-- ========================================================
+           SECTION 17 — SEO
+      ========================================================= -->
+      <section class="section" id="section-17">
+        <div class="section-header">
+          <div class="section-num">17</div>
+          <h1 class="section-title">SEO Optimization</h1>
+        </div>
+
+        <h2>Yoast SEO — Fill In for Every Page</h2>
+        <p>For each post and page, scroll below the editor to the <strong>Yoast SEO metabox</strong> and complete:</p>
+
+        <div class="table-wrap">
+          <table>
+            <thead><tr><th>Page</th><th>Focus Keyphrase</th><th>SEO Title</th><th>Meta Description (150–160 chars)</th></tr></thead>
+            <tbody>
+              <tr>
+                <td>Homepage</td>
+                <td>Monrovia artisan bakery</td>
+                <td>Sweet Palm Bakery | Fresh Pastries &amp; Bread in Monrovia</td>
+                <td>Sweet Palm Bakery is Monrovia's favourite neighbourhood bakery. Fresh cassava bread, custom cakes, and seasonal pastries baked from scratch daily on Tubman Blvd, Sinkor.</td>
+              </tr>
+              <tr>
+                <td>About Us</td>
+                <td>Sweet Palm Bakery Monrovia story</td>
+                <td>About Us | Sweet Palm Bakery — Monrovia's Artisan Bakery Since 2017</td>
+                <td>Learn the story of Sweet Palm Bakery, founded in 2017 by Maria Kollie in Monrovia, Liberia. Real ingredients, local sourcing, and baked from scratch every day.</td>
+              </tr>
+              <tr>
+                <td>Post 1</td>
+                <td>Liberian sweet potato bread secrets</td>
+                <td>5 Secrets to Our Famous Sweet Potato Rolls | Sweet Palm Bakery</td>
+                <td>Discover the 5 baking secrets behind Sweet Palm Bakery's legendary sweet potato rolls — from roasting technique to honey butter glaze. Baked fresh in Monrovia.</td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+
+        <h2>Google Search Console Setup</h2>
+        <div class="step-card">
+          <div class="step-card-header">
+            <div class="step-badge">Step 17.2</div>
+            <div class="step-card-title">Submit Site to Google Search Console</div>
+          </div>
+          <ol>
+            <li>Visit <strong>search.google.com/search-console</strong> and add your property</li>
+            <li>Verify ownership via <strong>Site Kit by Google</strong> plugin (easiest method)</li>
+            <li>Submit your sitemap: <code>https://sweetpalmbakery.com/sitemap_index.xml</code></li>
+            <li>Check for coverage errors and mobile usability issues</li>
+            <li>Monitor click-through rates and keyword rankings over time</li>
+          </ol>
+        </div>
+      </section>
+
+
+      <!-- ========================================================
+           SECTION 18 — SECURITY & PERFORMANCE
+      ========================================================= -->
+      <section class="section" id="section-18">
+        <div class="section-header">
+          <div class="section-num">18</div>
+          <h1 class="section-title">Security &amp; Performance</h1>
+        </div>
+
+        <h2>Security Hardening Checklist</h2>
+        <div class="table-wrap">
+          <table>
+            <thead><tr><th>Task</th><th>How To Implement</th></tr></thead>
+            <tbody>
+              <tr><td>Change default admin username</td><td>Create new admin user with unique username, delete old "admin"</td></tr>
+              <tr><td>Use a strong admin password</td><td>20+ characters, mixed case, numbers, symbols</td></tr>
+              <tr><td>Enable Two-Factor Authentication</td><td>Wordfence → Login Security → Enable 2FA</td></tr>
+              <tr><td>Keep WordPress core updated</td><td>Dashboard → Updates → Update WordPress</td></tr>
+              <tr><td>Keep plugins updated</td><td>Dashboard → Updates → Plugins</td></tr>
+              <tr><td>Disable file editing in WP admin</td><td>Add to wp-config.php: <code>define('DISALLOW_FILE_EDIT', true);</code></td></tr>
+              <tr><td>Limit login attempts</td><td>Wordfence → All Options → Login Security</td></tr>
+              <tr><td>SSL certificate active</td><td>Verify green padlock — get free SSL via Let's Encrypt at your host</td></tr>
+              <tr><td>Block XML-RPC if unused</td><td>Wordfence → Firewall → Block XML-RPC rule</td></tr>
+            </tbody>
+          </table>
+        </div>
+
+        <h2>Performance Optimization Checklist</h2>
+        <div class="table-wrap">
+          <table>
+            <thead><tr><th>Task</th><th>Plugin / Method</th></tr></thead>
+            <tbody>
+              <tr><td>Enable page caching</td><td>WP Super Cache (Settings → WP Super Cache → Caching On)</td></tr>
+              <tr><td>Optimize &amp; compress images</td><td>Smush → Bulk Smush all images + enable Lazy Load</td></tr>
+              <tr><td>Enable CDN</td><td>Cloudflare free plan (international CDN, fast for Liberia)</td></tr>
+              <tr><td>Minify CSS &amp; JavaScript</td><td>Autoptimize plugin</td></tr>
+              <tr><td>Database cleanup</td><td>WP-Optimize plugin (remove post revisions, spam, transients)</td></tr>
+            </tbody>
+          </table>
+        </div>
+
+        <h2>Test Your Site Speed</h2>
+        <ul>
+          <li><strong>Google PageSpeed Insights</strong> — pagespeed.web.dev — Target: 85+ on mobile, 90+ on desktop</li>
+          <li><strong>GTmetrix</strong> — gtmetrix.com — Good for waterfall analysis of slow-loading resources</li>
+          <li><strong>WebPageTest</strong> — webpagetest.org — Test from different geographic locations</li>
+        </ul>
+
+        <div class="note-box">
+          <div class="note-icon">💡</div>
+          <div class="note-content">
+            <div class="note-label">Note</div>
+            <p>In Liberia, a significant portion of users browse on mobile devices over mobile data connections. Optimising for mobile page speed is <em>especially</em> critical. Aim for pages that load in under 3 seconds on a typical 4G connection. The single biggest improvement is almost always image optimisation — compress all images with Smush before checking speed.</p>
+          </div>
+        </div>
+      </section>
+
+
+      <!-- ========================================================
+           SECTION 19 — LAUNCH CHECKLIST
+      ========================================================= -->
+      <section class="section" id="section-19">
+        <div class="section-header">
+          <div class="section-num">19</div>
+          <h1 class="section-title">Final Checklist &amp; Launch</h1>
+        </div>
+
+        <p>Before making the site public, go through every item on this checklist. Don't skip steps — each one matters.</p>
+
+        <h2>Content Checklist</h2>
+        <ul class="checklist">
+          <li>All pages published and thoroughly proofread</li>
+          <li>All blog posts have featured images set</li>
+          <li>Every image has descriptive alt text filled in</li>
+          <li>Contact form tested — sent a test submission and received confirmation email</li>
+          <li>All internal links tested — no broken links</li>
+          <li>Menu navigation works on desktop and mobile</li>
+          <li>Footer links all work correctly</li>
+          <li>Phone number (+231 777 123 456) and address (14 Tubman Blvd, Sinkor, Monrovia) correct on all pages</li>
+        </ul>
+
+        <h2>SEO Checklist</h2>
+        <ul class="checklist">
+          <li>Yoast SEO metabox filled in for every published page and post</li>
+          <li>Sitemap submitted to Google Search Console</li>
+          <li>Google Analytics 4 connected and recording data</li>
+          <li>Settings → Reading: "Discourage search engines" is <strong>UNCHECKED</strong> ⚠️</li>
+        </ul>
+
+        <h2>Security Checklist</h2>
+        <ul class="checklist">
+          <li>Strong admin password (20+ characters, not "admin")</li>
+          <li>Two-factor authentication enabled on admin account</li>
+          <li>Wordfence firewall active and configured</li>
+          <li>UpdraftPlus auto-backup schedule confirmed (daily DB, weekly files)</li>
+        </ul>
+
+        <h2>Performance Checklist</h2>
+        <ul class="checklist">
+          <li>All images compressed with Smush (Bulk Smush completed)</li>
+          <li>Caching enabled with WP Super Cache</li>
+          <li>PageSpeed Insights score above 80 on mobile</li>
+          <li>Site loads in under 4 seconds on mobile connection test</li>
+        </ul>
+
+        <h2>Legal Checklist</h2>
+        <ul class="checklist">
+          <li>Privacy Policy page published</li>
+          <li>Contact form includes data consent checkbox (WPForms → form settings)</li>
+          <li>Cookie consent banner active (install CookieYes plugin)</li>
+        </ul>
+
+        <h2>Final Launch Steps</h2>
+        <div class="step-card">
+          <div class="step-card-header">
+            <div class="step-badge">Launch</div>
+            <div class="step-card-title">Go Live</div>
+          </div>
+          <ol>
+            <li>Go to <strong>Settings → Reading</strong> → <strong>uncheck</strong> "Discourage search engines"</li>
+            <li>Set Homepage: <strong>Settings → Reading → Homepage:</strong> Home</li>
+            <li>Set Blog page: <strong>Settings → Reading → Posts page:</strong> Blog</li>
+            <li>Run <strong>UpdraftPlus → Backup Now</strong> — final backup before going live</li>
+            <li>Visit your site URL and confirm everything loads correctly</li>
+            <li>Share the live URL with your instructor and class! 🎉</li>
+          </ol>
+        </div>
+      </section>
+
+
+      <!-- ========================================================
+           RESOURCES SUMMARY
+      ========================================================= -->
+      <div class="section-divider">
+        <div class="section-divider-line"></div>
+        <div class="section-divider-icon">📚</div>
+        <div class="section-divider-line"></div>
+      </div>
+
+      <section class="section" id="resources">
+        <div class="section-header">
+          <div class="section-num" style="background:var(--amber-500);">★</div>
+          <h1 class="section-title">Resources Summary</h1>
+        </div>
+
+        <div class="resource-grid">
+          <div class="resource-box">
+            <div class="resource-box-header">🎨 Theme &amp; Builder</div>
+            <ul>
+              <li>Astra Theme — wordpress.org/themes/astra</li>
+              <li>Starter Templates — by Brainstorm Force</li>
+              <li>Elementor Website Builder</li>
+              <li>Essential Addons for Elementor</li>
+            </ul>
+          </div>
+          <div class="resource-box">
+            <div class="resource-box-header">🔌 Essential Plugins</div>
+            <ul>
+              <li>Classic Editor</li>
+              <li>Yoast SEO</li>
+              <li>WPForms Lite</li>
+              <li>WooCommerce</li>
+              <li>Smush</li>
+              <li>UpdraftPlus</li>
+              <li>Wordfence Security</li>
+              <li>WP Super Cache</li>
+              <li>MailPoet</li>
+              <li>Site Kit by Google</li>
+              <li>CookieYes (GDPR/cookie consent)</li>
+            </ul>
+          </div>
+          <div class="resource-box">
+            <div class="resource-box-header">🌐 External Services</div>
+            <ul>
+              <li>Unsplash — free stock photos</li>
+              <li>Flaticon — icons &amp; SVGs</li>
+              <li>Google Fonts — typography</li>
+              <li>Cloudflare — CDN &amp; security</li>
+              <li>Google Analytics — traffic data</li>
+              <li>Google Search Console — SEO</li>
+            </ul>
+          </div>
+          <div class="resource-box">
+            <div class="resource-box-header">⚡ Speed Testing Tools</div>
+            <ul>
+              <li>pagespeed.web.dev — PageSpeed Insights</li>
+              <li>gtmetrix.com — waterfall analysis</li>
+              <li>webpagetest.org — geo testing</li>
+            </ul>
+          </div>
+        </div>
+
+        <h2>Suggested 10-Week Course Schedule</h2>
+        <div class="week-grid">
+          <div class="week-card">
+            <div class="week-num">Week 01</div>
+            <ul><li>Prerequisites &amp; LocalWP</li><li>Dashboard tour</li></ul>
+          </div>
+          <div class="week-card">
+            <div class="week-num">Week 02</div>
+            <ul><li>Astra theme install</li><li>Customizer settings</li></ul>
+          </div>
+          <div class="week-card">
+            <div class="week-num">Week 03</div>
+            <ul><li>Media Library</li><li>Classic Editor + First Post</li></ul>
+          </div>
+          <div class="week-card">
+            <div class="week-num">Week 04</div>
+            <ul><li>Posts 2 &amp; 3</li><li>Categories &amp; Tags</li></ul>
+          </div>
+          <div class="week-card">
+            <div class="week-num">Week 05</div>
+            <ul><li>All static pages</li><li>Privacy Policy</li></ul>
+          </div>
+          <div class="week-card">
+            <div class="week-num">Week 06</div>
+            <ul><li>Elementor Homepage</li><li>Elementor Contact page</li></ul>
+          </div>
+          <div class="week-card">
+            <div class="week-num">Week 07</div>
+            <ul><li>WPForms + Yoast</li><li>WooCommerce intro</li></ul>
+          </div>
+          <div class="week-card">
+            <div class="week-num">Week 08</div>
+            <ul><li>Security plugins</li><li>Backups &amp; performance</li></ul>
+          </div>
+          <div class="week-card">
+            <div class="week-num">Week 09</div>
+            <ul><li>Menus, Widgets</li><li>User Management, Tools</li></ul>
+          </div>
+          <div class="week-card">
+            <div class="week-num">Week 10</div>
+            <ul><li>SEO &amp; Analytics</li><li>Launch checklist 🚀</li></ul>
+          </div>
+        </div>
+      </section>
+
+
+      <!-- PDF CTA at bottom -->
+      <div class="cta-bar">
+        <div class="cta-bar-text">
+          <h3>📄 Download This Guide as a PDF</h3>
+          <p>Use your browser's Print dialog (Ctrl+P / Cmd+P) and select "Save as PDF" for a clean multi-page document.</p>
+        </div>
+        <button class="btn-download" onclick="window.print()">⬇ Print / Save as PDF</button>
+      </div>
+
+    </main><!-- /content -->
+  </div><!-- /layout -->
+
+
+  <!-- ============================================================
+       FOOTER
+  ============================================================ -->
+  <footer class="site-footer">
+    <p>
+      <strong>Build a WordPress Site From Scratch</strong> — Sweet Palm Bakery Project Guide<br/>
+      Localized for Liberia · Based in Monrovia · Created for instructional use<br/>
+      <em>All business names, addresses, and phone numbers are fictional and used for educational purposes only.</em>
+    </p>
+  </footer>
+
+
+  <!-- ============================================================
+       JAVASCRIPT — TOC Highlighting, Mobile Toggle, Progress
+  ============================================================ -->
+  <script>
+    // Mobile sidebar toggle
+    const toggle = document.getElementById('tocToggle');
+    const sidebar = document.getElementById('sidebar');
+    toggle.addEventListener('click', () => {
+      sidebar.classList.toggle('open');
+      toggle.textContent = sidebar.classList.contains('open') ? '✕' : '☰';
+    });
+    // Close sidebar on link click (mobile)
+    sidebar.querySelectorAll('a').forEach(link => {
+      link.addEventListener('click', () => {
+        sidebar.classList.remove('open');
+        toggle.textContent = '☰';
+      });
+    });
+
+    // Reading progress + TOC active state
+    const sections = document.querySelectorAll('.section[id]');
+    const tocLinks = document.querySelectorAll('.toc-list a');
+    const progressBar = document.getElementById('progressBar');
+    const progressLabel = document.getElementById('progressLabel');
+
+    function updateTOC() {
+      // Progress bar
+      const scrollTop = window.scrollY;
+      const docHeight = document.body.scrollHeight - window.innerHeight;
+      const pct = docHeight > 0 ? Math.round((scrollTop / docHeight) * 100) : 0;
+      progressBar.style.width = pct + '%';
+      progressLabel.textContent = pct + '% complete';
+
+      // Active TOC link
+      let current = '';
+      sections.forEach(sec => {
+        const top = sec.getBoundingClientRect().top;
+        if (top <= 80) current = sec.getAttribute('id');
+      });
+      tocLinks.forEach(link => {
+        link.classList.remove('active');
+        if (link.getAttribute('href') === '#' + current) {
+          link.classList.add('active');
+          // Scroll TOC link into view (in sidebar)
+          link.scrollIntoView({ block: 'nearest', behavior: 'smooth' });
+        }
+      });
+    }
+
+    window.addEventListener('scroll', updateTOC, { passive: true });
+    updateTOC();
+  </script>
+
+</body>
+</html>
