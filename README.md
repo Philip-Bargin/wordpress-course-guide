@@ -1,39 +1,3 @@
-# WordPress Course Guide — Deployment Instructions
-
-## 🚀 Hosting on GitHub Pages
-
-### Step 1 — Create a GitHub Repository
-1. Go to [github.com](https://github.com) and sign in (or create a free account)
-2. Click **"New repository"**
-3. Name it: `wordpress-course-guide` (or any name you prefer)
-4. Set visibility: **Public** (required for free GitHub Pages)
-5. Click **"Create repository"**
-
-### Step 2 — Upload the Files
-**Option A — Via the GitHub Website (easiest):**
-1. Inside your new repository, click **"Add file" → "Upload files"**
-2. Drag and drop `index.html` into the upload area
-3. Click **"Commit changes"**
-
-**Option B — Via Git (recommended):**
-```bash
-git init
-git add index.html
-git commit -m "Initial commit: WordPress course guide"
-git branch -M main
-git remote add origin https://github.com/Philip-Bargin/wordpress-course-guide.git
-git push -u origin main
-```
-
-### Step 3 — Enable GitHub Pages
-1. In your repository, click **Settings** (top menu)
-2. In the left sidebar, scroll to **"Pages"**
-3. Under **"Branch"**, select `main` and folder `/root`
-4. Click **"Save"**
-5. Wait 1–2 minutes, then visit: `https://Philip-Bargin.github.io/wordpress-course-guide/`
-
----
-
 ## 📄 Generating the PDF
 
 The guide has a built-in **"Download / Print as PDF"** button that uses your browser's print function.
