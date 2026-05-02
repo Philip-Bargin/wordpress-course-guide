@@ -21,7 +21,7 @@ git init
 git add index.html
 git commit -m "Initial commit: WordPress course guide"
 git branch -M main
-git remote add origin https://github.com/YOUR_USERNAME/wordpress-course-guide.git
+git remote add origin https://github.com/Philip-Bargin/wordpress-course-guide.git
 git push -u origin main
 ```
 
@@ -30,7 +30,7 @@ git push -u origin main
 2. In the left sidebar, scroll to **"Pages"**
 3. Under **"Branch"**, select `main` and folder `/root`
 4. Click **"Save"**
-5. Wait 1–2 minutes, then visit: `https://YOUR_USERNAME.github.io/wordpress-course-guide/`
+5. Wait 1–2 minutes, then visit: `https://Philip-Bargin.github.io/wordpress-course-guide/`
 
 ---
 
